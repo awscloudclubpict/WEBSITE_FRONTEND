@@ -21,7 +21,7 @@ export default function ContactUs() {
       className="relative min-h-screen flex justify-center items-start text-white p-6"
       style={{
         background:
-          "radial-gradient(circle at right, #060717 100%, #11133B 0%, #327ED7 0%)",
+          "radial-gradient(circle at left bottom, #060717 70%, #11133B 100%, #327ED7 100%)",
       }}
     >
       {/* Cloud Image */}
