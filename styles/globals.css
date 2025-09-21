@@ -46,3 +46,16 @@ html {
 ::-webkit-scrollbar-thumb:hover {
   background: #2980B9;
 }
+
+/* Additional styling for better visual appeal */
+.hero-gradient {
+  background: linear-gradient(135deg, #1A1A2E 0%, #16213E 100%);
+}
+
+.text-shadow {
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.illustration-shadow {
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
