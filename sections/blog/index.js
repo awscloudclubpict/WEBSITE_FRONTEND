@@ -1,4 +1,331 @@
-// Placeholder page for Blog
-export default function Blog() {
-  return <div>Blog Section</div>;
-}
+'use client';
+import React, { useState, useEffect } from 'react';
+import { BlogLoader } from './api/loader';
+import BlogCard from './components/BlogCards';
+import Button from './components/Button';
+import WriteBlogForm from './components/WriteBlogForm';
+import AddBlogForm from './components/AddBlogForm';
+
+const Blogs = () => {
+  const [selectedBlogFilter, setSelectedBlogFilter] = useState('WEB');
+  const [blogs, setBlogs] = useState([]);
+  const [filteredBlogs, setFilteredBlogs] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [showWriteForm, setShowWriteForm] = useState(false);
+  const [showAddBlogForm, setShowAddBlogForm] = useState(false);
+  const [showSkeleton, setShowSkeleton] = useState(true);
+
+  const blogFilters = ['WEB', 'AI/ML', 'AWS', 'AI'];
+
+  useEffect(() => {
+    loadInitialData();
+  }, []);
+
+  useEffect(() => {
+    if (blogs && blogs.length > 0) {
+      const filtered = blogs
+        .filter(blog =>
+          blog.tags?.map(tag => tag.toUpperCase()).includes(selectedBlogFilter.toUpperCase())
+        )
+        .slice(0, 4);
+
+      setFilteredBlogs(filtered);
+    } else {
+      setFilteredBlogs([]);
+    }
+  }, [selectedBlogFilter, blogs]);
+
+  const loadInitialData = async () => {
+    try {
+      setLoading(true);
+      setShowSkeleton(true);
+      setError(null);
+
+      const [blogsResult] = await Promise.all([
+        BlogLoader.loadAllBlogs(),
+        new Promise(resolve => setTimeout(resolve, 800))
+      ]);
+
+      if (blogsResult.error) throw new Error(blogsResult.error);
+      setBlogs(blogsResult.data);
+    } catch (err) {
+      setError(err.message);
+      console.error('Error loading data:', err);
+    } finally {
+      setLoading(false);
+      setTimeout(() => setShowSkeleton(false), 200);
+    }
+  };
+
+  const handleReadBlog = (blog) => {
+    if (blog.share_url) {
+      window.open(blog.share_url, '_blank', 'noopener,noreferrer');
+    }
+  };
+
+  const handleSeeAllBlogs = () => {
+    window.open('https://www.linkedin.com/newsletters/aws-cloud-club-pict-7218283276505870336', '_blank', 'noopener,noreferrer');
+  };
+
+  const handleAddBlogSubmit = (blogData) => {
+    console.log('New blog data:', blogData);
+    setShowAddBlogForm(false);
+  };
+
+  // Skeleton Loading Components
+  const SkeletonCard = () => (
+    <div className="bg-[#060c20] rounded-2xl sm:rounded-3xl overflow-hidden flex flex-col h-full animate-pulse">
+      <div className="w-full h-48 sm:h-56 md:h-64 lg:h-72 bg-[#0a0f1f] flex items-center justify-center p-4">
+        <div className="w-full h-full bg-[#071128] rounded-lg"></div>
+      </div>
+      <div className="p-4 sm:p-6 flex flex-col flex-1">
+        <div className="h-6 bg-[#071128] rounded mb-3"></div>
+        <div className="h-4 bg-[#071128] rounded mb-2 w-3/4"></div>
+        <div className="h-4 bg-[#071128] rounded mb-2"></div>
+        <div className="h-4 bg-[#071128] rounded mb-3 sm:mb-4 w-5/6"></div>
+        <div className="h-5 bg-[#071128] rounded w-1/3"></div>
+      </div>
+    </div>
+  );
+
+  const SkeletonSingleBlog = () => (
+    <div className="bg-[#060c20] rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 animate-pulse">
+      <div className="flex flex-col lg:flex-row gap-4 sm:gap-6 md:gap-8 items-stretch">
+        <div className="w-full lg:w-2/5">
+          <div className="w-full h-48 sm:h-56 md:h-64 lg:h-72 bg-[#0a0f1f] rounded-xl sm:rounded-2xl flex items-center justify-center">
+            <div className="w-full h-full bg-[#071128] rounded-xl sm:rounded-2xl"></div>
+          </div>
+        </div>
+        <div className="flex-1 text-left flex flex-col justify-center">
+          <div className="h-7 bg-[#071128] rounded mb-2 sm:mb-4 w-4/5"></div>
+          <div className="h-5 bg-[#071128] rounded mb-2 sm:mb-4 w-2/3"></div>
+          <div className="h-4 bg-[#071128] rounded mb-2"></div>
+          <div className="h-4 bg-[#071128] rounded mb-2 w-5/6"></div>
+          <div className="h-4 bg-[#071128] rounded mb-4 sm:mb-6 w-3/4"></div>
+          <div className="h-5 bg-[#071128] rounded w-1/4"></div>
+        </div>
+      </div>
+    </div>
+  );
+
+  if (error) {
+    return (
+      <section id="blogs" className="py-8 md:py-12 lg:py-16 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto text-center">
+          <p className="text-red-400 text-lg">Error: {error}</p>
+          <button onClick={loadInitialData} className="text-[#327dd6] mt-4 hover:underline text-lg">
+            Try Again
+          </button>
+        </div>
+      </section>
+    );
+  }
+
+  return (
+    <section id="blogs" className="py-8 md:py-12 lg:py-16 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto">
+        {/* Header */}
+        <div className="flex flex-col lg:flex-row items-start justify-between mb-8 lg:mb-12">
+          <div className="w-full lg:w-1/2 mb-6 lg:mb-0 lg:pr-8">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gradient-blue-purple mb-4">
+              Student Blogs
+            </h2>
+            <p className="text-global-4 text-lg sm:text-xl md:text-2xl lg:text-3xl mb-4 lg:mb-6">
+              Real Voices. Real Stories.<br />By our community.
+            </p>
+            <Button 
+              variant="accent" 
+              size="md" 
+              onClick={() => setShowAddBlogForm(true)}
+              className="text-sm sm:text-base"
+            >
+              + Add Blog
+            </Button>
+          </div>
+          <div className="w-full lg:w-1/2 flex justify-center lg:justify-end">
+            <img
+              src="/images/img_image_5.png"
+              alt="Student Blogs Illustration"
+              className="w-48 sm:w-56 md:w-64 lg:w-72 xl:w-80"
+              style={{ maxWidth: '100%', height: 'auto' }}
+            />
+          </div>
+        </div>
+
+        {/* Blog Filters */}
+        <div className="flex flex-wrap justify-center gap-3 sm:gap-4 mb-8 lg:mb-12">
+          {blogFilters.map((filter) => (
+            <button
+              key={filter}
+              onClick={() => setSelectedBlogFilter(filter)}
+              className={`px-4 sm:px-6 py-2 sm:py-3 rounded-full border-2 transition-all duration-300 text-sm sm:text-base font-semibold min-w-[80px] sm:min-w-[100px] text-center ${
+                selectedBlogFilter === filter
+                  ? 'border-[#327dd6] text-[#327dd6] bg-transparent'
+                  : 'border-[#ffffff4c] text-global-4 bg-transparent hover:border-[#327dd6] hover:text-[#327dd6]'
+              }`}
+            >
+              {filter}
+            </button>
+          ))}
+        </div>
+
+        {/* Blog Content */}
+        <div className="space-y-6 sm:space-y-8">
+          {showSkeleton ? (
+            <>
+              <SkeletonSingleBlog />
+              <div className="bg-[#0711287c] rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
+                  <SkeletonCard />
+                  <SkeletonCard />
+                  <SkeletonCard />
+                </div>
+              </div>
+            </>
+          ) : filteredBlogs.length > 0 ? (
+            <>
+              {filteredBlogs.length === 1 && (
+                <div className="bg-[#060c20] rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8">
+                  <div className="flex flex-col lg:flex-row gap-4 sm:gap-6 md:gap-8 items-stretch">
+                    <div className="w-full lg:w-2/5">
+                      <div className="blog-card-image-container">
+                        <img
+                          src={filteredBlogs[0].thumbnail_image_url}
+                          alt={filteredBlogs[0].title}
+                          className="single-blog-image w-full h-48 sm:h-56 md:h-64 lg:h-72 object-cover rounded-xl sm:rounded-2xl"
+                        />
+                      </div>
+                    </div>
+                    <div className="flex-1 text-left flex flex-col justify-center">
+                      <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-global-4 mb-2 sm:mb-4">
+                        {filteredBlogs[0].title}
+                      </h3>
+                      <p className="text-global-4 text-base sm:text-lg mb-2 sm:mb-4">
+                        by <span className="text-[#327dd6] font-bold">{filteredBlogs[0].author_name}</span>
+                      </p>
+                      <p className="text-global-4 text-sm sm:text-base md:text-lg mb-4 sm:mb-6 leading-relaxed">
+                        {filteredBlogs[0].short_description}
+                      </p>
+                      <button
+                        onClick={() => handleReadBlog(filteredBlogs[0])}
+                        className="text-[#f4b631] text-base sm:text-lg font-bold hover:underline inline-block text-left"
+                      >
+                        Read Blog →
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {filteredBlogs.length === 2 && (
+                <div className="bg-[#0711287c] rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 md:gap-8">
+                    {filteredBlogs.map((blog) => (
+                      <BlogCard key={blog.blog_id} blog={blog} onReadBlog={handleReadBlog} />
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {filteredBlogs.length === 3 && (
+                <div className="bg-[#0711287c] rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
+                    {filteredBlogs.map((blog) => (
+                      <BlogCard key={blog.blog_id} blog={blog} onReadBlog={handleReadBlog} />
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {filteredBlogs.length === 4 && (
+                <>
+                  <div className="bg-[#0711287c] rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
+                      {filteredBlogs.slice(0, 3).map((blog) => (
+                        <BlogCard key={blog.blog_id} blog={blog} onReadBlog={handleReadBlog} />
+                      ))}
+                    </div>
+                  </div>
+                  <div className="bg-[#060c20] rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8">
+                    <div className="flex flex-col lg:flex-row gap-4 sm:gap-6 items-center">
+                      <div className="w-full lg:w-2/5">
+                        <div className="fourth-blog-image-container">
+                          <img
+                            src={filteredBlogs[3].thumbnail_image_url}
+                            alt={filteredBlogs[3].title}
+                            className="fourth-blog-image w-full h-48 sm:h-56 md:h-64 object-cover rounded-xl sm:rounded-2xl"
+                          />
+                        </div>
+                      </div>
+                      <div className="flex-1 text-left">
+                        <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-global-4 mb-2 sm:mb-3 line-clamp-2">
+                          {filteredBlogs[3].title}
+                        </h3>
+                        <p className="text-global-4 text-base sm:text-lg mb-2 sm:mb-3">
+                          by <span className="text-[#327dd6] font-bold">{filteredBlogs[3].author_name}</span>
+                        </p>
+                        <p className="text-global-4 text-sm sm:text-base md:text-lg mb-3 sm:mb-4 line-clamp-2">
+                          {filteredBlogs[3].short_description}
+                        </p>
+                        <button
+                          onClick={() => handleReadBlog(filteredBlogs[3])}
+                          className="text-[#f4b631] text-base sm:text-lg font-bold hover:underline inline-block"
+                        >
+                          Read Blog →
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </>
+              )}
+            </>
+          ) : (
+            <div className="text-center py-8 sm:py-12">
+              {blogs.length === 0
+                ? <p className="text-global-4 text-lg sm:text-xl">No blogs have been added yet.</p>
+                : <p className="text-global-4 text-lg sm:text-xl">No blogs found for "{selectedBlogFilter}".</p>
+              }
+            </div>
+          )}
+        </div>
+
+        {/* See All Blogs */}
+        {!showSkeleton && (
+          <div className="text-center md:text-right mt-6 sm:mt-8">
+            <button onClick={handleSeeAllBlogs} className="text-[#f4b631] text-lg sm:text-xl font-bold hover:underline">
+              See All Blogs →
+            </button>
+          </div>
+        )}
+
+        {/* CTA */}
+        {!showSkeleton && (
+          <div className="flex flex-col lg:flex-row items-center justify-between mt-8 sm:mt-12 gap-4 sm:gap-6">
+            <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-global-4 text-center lg:text-left">
+              Have a story to tell? Be our next blog writer!
+            </h3>
+            <div className="flex justify-center lg:justify-end w-full lg:w-auto">
+              <Button variant="accent" size="md" onClick={() => setShowWriteForm(true)} className="text-sm sm:text-base">
+                Write A Blog
+              </Button>
+            </div>
+          </div>
+        )}
+
+        {showWriteForm && (
+          <WriteBlogForm onClose={() => setShowWriteForm(false)} />
+        )}
+        
+        {showAddBlogForm && (
+          <AddBlogForm 
+            onClose={() => setShowAddBlogForm(false)} 
+            onSubmit={handleAddBlogSubmit}
+          />
+        )}
+      </div>
+    </section>
+  );
+};
+
+export default Blogs;
