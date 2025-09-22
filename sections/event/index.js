@@ -1,6 +1,31 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 
+function EventSkeleton({ count = 2 }) {
+  return (
+    <div className="carousel-container">
+      {Array.from({ length: count }).map((_, idx) => (
+        <div key={idx} className="event-card">
+          <div className="event-card-inner skeleton-card">
+            <div className="event-date-box skeleton-date"></div>
+            <div className="skeleton-title"></div>
+            <div className="skeleton-desc"></div>
+            <div className="event-footer">
+              <div className="flex items-center justify-between">
+                <div className="event-venue">
+                  <div className="event-venue-icon skeleton-dot"></div>
+                  <span className="skeleton-venue"></span>
+                </div>
+                <div className="skeleton-btn"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export default function EventSection() {
   const [activeFilter, setActiveFilter] = useState("All");
   const [visibleEvents, setVisibleEvents] = useState(2);
@@ -27,7 +52,7 @@ export default function EventSection() {
 
   // Use hardcoded token for all requests
   const token =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGV4YW1wbGUuY29tIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzU4MTI3OTQwLCJleHAiOjE3NTgxMzE1NDB9.wy1CB-mDDorDHV84FBC_Vz4gpvQyCtMEREYiXe80e7w";
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGV4YW1wbGUuY29tIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzU4NTM3NzQ1LCJleHAiOjE3NTg1NDEzNDV9.trT1pCVTMrPqx16X7keEGn-M2DdnbxrAp9-n5uB9yG0";
 
   useEffect(() => {
     setIsAdmin(true); // demo admin
@@ -277,67 +302,71 @@ export default function EventSection() {
             </svg>
           </button>
 
-          <div className="carousel-container">
-            {getCurrentEvents().map((event) => {
-              const { day, month } = formatDate(event.date);
+          {loading ? (
+            <EventSkeleton count={visibleEvents} />
+          ) : (
+            <div className="carousel-container">
+              {getCurrentEvents().map((event) => {
+                const { day, month } = formatDate(event.date);
 
-              // Show "Register" for all events today or in the future
-              const eventDate = new Date(event.date);
-              const today = new Date();
-              today.setHours(0, 0, 0, 0); // Ignore time for comparison
-              const isUpcoming = eventDate >= today;
+                // Show "Register" for all events today or in the future
+                const eventDate = new Date(event.date);
+                const today = new Date();
+                today.setHours(0, 0, 0, 0); // Ignore time for comparison
+                const isUpcoming = eventDate >= today;
 
-              // Show "PAST" label if event date is in the past
-              const isPast = eventDate < today;
+                // Show "PAST" label if event date is in the past
+                const isPast = eventDate < today;
 
-              return (
-                <div key={event.event_id} className="event-card">
-                  <div className="event-card-inner">
-                    {/* Past Event Label */}
-                    {isPast && <div className="event-past-label">PAST</div>}
+                return (
+                  <div key={event.event_id} className="event-card">
+                    <div className="event-card-inner">
+                      {/* Past Event Label */}
+                      {isPast && <div className="event-past-label">PAST</div>}
 
-                    {/* Date Box */}
-                    <div className="event-date-box">
-                      <span className="event-date-day">{day}</span>
-                      <span className="event-date-month">{month}</span>
-                    </div>
+                      {/* Date Box */}
+                      <div className="event-date-box">
+                        <span className="event-date-day">{day}</span>
+                        <span className="event-date-month">{month}</span>
+                      </div>
 
-                    {/* Event Content */}
-                    <div className="flex-grow">
-                      <h3 className="event-title-text">{event.title}</h3>
-                      <p className="event-description">{event.description}</p>
-                    </div>
+                      {/* Event Content */}
+                      <div className="flex-grow">
+                        <h3 className="event-title-text">{event.title}</h3>
+                        <p className="event-description">{event.description}</p>
+                      </div>
 
-                    {/* Footer */}
-                    <div className="event-footer">
-                      <div className="flex items-center justify-between">
-                        <div className="event-venue">
-                          <div className="event-venue-icon">
-                            <div className="event-venue-dot">
-                              <div className="event-venue-dot-inner"></div>
+                      {/* Footer */}
+                      <div className="event-footer">
+                        <div className="flex items-center justify-between">
+                          <div className="event-venue">
+                            <div className="event-venue-icon">
+                              <div className="event-venue-dot">
+                                <div className="event-venue-dot-inner"></div>
+                              </div>
                             </div>
+                            <span className="event-venue-text">
+                              {event.venue}
+                            </span>
                           </div>
-                          <span className="event-venue-text">
-                            {event.venue}
-                          </span>
+                          {isUpcoming && (
+                            <a
+                              href={event.registration_link || "#"}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="event-register-button"
+                            >
+                              Register
+                            </a>
+                          )}
                         </div>
-                        {isUpcoming && (
-                          <a
-                            href={event.registration_link || "#"}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="event-register-button"
-                          >
-                            Register
-                          </a>
-                        )}
                       </div>
                     </div>
                   </div>
-                </div>
-              );
-            })}
-          </div>
+                );
+              })}
+            </div>
+          )}
 
           <button
             onClick={() => scrollCarousel("right")}

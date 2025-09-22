@@ -1,6 +1,9 @@
 import Image from "next/image";
 import { Geist, Geist_Mono } from "next/font/google";
 import EventSection from "../sections/event"; // Import the EventSection
+import AboutSection from "../sections/about"; // Import the AboutSection
+import HomeSection from "../sections/home"; // Import the HomeSection
+import MemberSection from "../sections/members"; // Import the MemberSection
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -15,7 +18,7 @@ const geistMono = Geist_Mono({
 export default function Home() {
   return (
     <div className={`${geistSans.variable} ${geistMono.variable} font-sans`}>
-      {/* Your existing content */}
+      {/* Your existing content
       <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
         <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
           <Image
@@ -111,10 +114,11 @@ export default function Home() {
             Go to nextjs.org →
           </a>
         </footer>
-      </div>
-      
+      </div> */}
+      <AboutSection />
       {/* Add the Event Section */}
       <EventSection />
+      <MemberSection />
     </div>
   );
 }

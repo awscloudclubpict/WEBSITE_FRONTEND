@@ -1,0 +1,272 @@
+.about-section {
+  background: #060717;
+  color: #fff;
+  padding: 2rem 1rem;
+  min-height: 80vh;
+  font-family: 'Inter', sans-serif;
+}
+
+.about-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.about-header {
+  margin-bottom: 1.5rem;
+}
+
+.about-title {
+  font-size: 2.8rem;
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: 0.5rem;
+}
+
+.about-gradient {
+  background: linear-gradient(135deg, #327ED7 0%, #9E53D1 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.about-main {
+  display: flex;
+  gap: 3rem;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.about-left {
+  flex: 1 1 500px;
+  min-width: 300px;
+  max-width: 600px;
+}
+
+.about-right {
+  flex: 0 0 auto;
+  min-width: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-top: -6rem;
+}
+
+.about-subtitle {
+  font-size: 1.8rem;
+  font-weight: 700;
+  background: linear-gradient(180deg, #327ED7 0%, #9E53D1 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 1rem;
+  margin-top: 1rem;
+}
+
+.about-desc {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+  color: #e0e0e0;
+}
+
+.about-stats {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.stat-item {
+  background: #091734;
+  border-radius: 12px;
+  padding: 1rem;
+  flex: 1;
+  min-width: 120px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.stat-content {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.stat-icon {
+  font-size: 2rem;
+  flex-shrink: 0;
+}
+
+.stat-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-number {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #fff;
+  line-height: 1.5;
+}
+
+.stat-label {
+  font-size: 1rem;
+  color: #e0e0e0;
+  line-height: 1.2;
+}
+
+.about-list {
+  margin-top: 1.5rem;
+  list-style: none;
+  padding: 0;
+}
+
+.about-list li {
+  margin-bottom: 0.8rem;
+  font-size: 1.1rem;
+  color: #ffffff;
+  position: relative;
+  padding-left: 2rem;
+  line-height: 1.5;
+}
+
+.about-list li:before {
+  content: "✓";
+  color: #4CAF50;
+  position: absolute;
+  left: 0;
+  top: 0;
+  font-size: 1.2rem;
+  font-weight: bold;
+  background: rgba(76, 175, 80, 0.1);
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.about-image-wrapper {
+  position: relative;
+  margin-bottom: 4rem;
+  width: 100%;
+  max-width: 400px;
+}
+
+.about-image {
+  border-radius: 18px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+  width: 100%;
+  height: auto;
+}
+
+.about-avatar {
+  position: absolute;
+  top: -25px;
+  left: -25px;
+  background: #23253a;
+  border-radius: 50%;
+  padding: 5px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  border: 2px solid #327ED7;
+}
+
+.about-timeline {
+  width: 100%;
+  max-width: 400px;
+  position: relative;
+  padding-left: 1.5rem;
+  border-left: 2px dashed #327ED7;
+}
+
+.timeline-item {
+  position: relative;
+  margin-bottom: 1.8rem;
+  display: flex;
+  align-items: flex-start;
+}
+
+.timeline-item:last-child {
+  margin-bottom: 0;
+}
+
+.timeline-dot {
+  position: absolute;
+  left: -2rem;
+  top: 0.4rem;
+  width: 15px;
+  height: 15px;
+  background: #327ED7;
+  border-radius: 50%;
+  border: 2px solid #fff;
+}
+
+.timeline-content {
+  margin-left: 0.5rem;
+}
+
+.timeline-year {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 0.3rem;
+}
+
+.timeline-desc {
+  font-size: 1rem;
+  color: #e0e0e0;
+}
+
+@media (max-width: 900px) {
+  .about-main {
+    flex-direction: column;
+    gap: 2.5rem;
+  }
+  
+  .about-right {
+    margin-top: 0;
+    align-items: center;
+  }
+  
+  .about-title {
+    font-size: 2.3rem;
+  }
+  
+  .about-stats {
+    justify-content: center;
+  }
+  
+  .stat-item {
+    flex: 0 0 calc(33.333% - 1rem);
+  }
+}
+
+@media (max-width: 600px) {
+  .about-title {
+    font-size: 2rem;
+  }
+  
+  .about-subtitle {
+    font-size: 1.5rem;
+  }
+  
+  .stat-item {
+    flex: 0 0 calc(50% - 1rem);
+  }
+  
+  .about-image-wrapper {
+    max-width: 100%;
+  }
+  
+  .about-avatar {
+    top: -20px;
+    left: -20px;
+  }
+  
+  .stat-content {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.5rem;
+  }
+}
