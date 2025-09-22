@@ -79,8 +79,19 @@ export default function EventSection() {
         throw new Error("Unauthorized: Invalid or missing token");
       }
 
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
+      }
+
+      // Check if response is JSON
+      const contentType = res.headers.get("content-type");
+      if (!contentType || !contentType.includes("application/json")) {
+        throw new Error("Server returned non-JSON response");
+      }
+
       const data = await res.json();
-      setEvents(data.events || []);
+      // API returns events array directly, not wrapped in an object
+      setEvents(Array.isArray(data) ? data : data.events || []);
     } catch (err) {
       console.error("Error fetching events:", err);
       setEvents([]);
