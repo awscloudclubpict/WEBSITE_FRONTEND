@@ -12,6 +12,11 @@ export default function Home() {
     setMenuOpen(false); // Close mobile menu after clicking
   };
 
+  // Function to handle joining via Meetup
+  const handleJoinUs = () => {
+    window.open("https://www.meetup.com/aws-cloud-club-at-pict/", "_blank");
+  };
+
   return (
     <div className="min-h-screen bg-[#060717] text-white font-inter">
       {/* Navbar */}
@@ -71,7 +76,10 @@ export default function Home() {
 
         <div className="flex items-center gap-3 sm:gap-4">
           {/* Join Us Button (Desktop) */}
-          <button className="hidden md:block bg-[#327dd6] text-white px-4 py-2 rounded-lg font-semibold hover:bg-blue-600 transition-colors text-sm md:text-base whitespace-nowrap">
+          <button 
+            className="hidden md:block bg-[#327dd6] text-white px-4 py-2 rounded-lg font-semibold hover:bg-blue-600 transition-colors text-sm md:text-base whitespace-nowrap"
+            onClick={handleJoinUs}
+          >
             Join Us
           </button>
 
@@ -137,7 +145,10 @@ export default function Home() {
             >
               Contact Us
             </button>
-            <button className="bg-[#327dd6] text-white py-2 px-4 rounded font-semibold hover:bg-blue-600 transition-colors mt-2 text-sm whitespace-nowrap">
+            <button 
+              className="bg-[#327dd6] text-white py-2 px-4 rounded font-semibold hover:bg-blue-600 transition-colors mt-2 text-sm whitespace-nowrap"
+              onClick={handleJoinUs}
+            >
               Join Us
             </button>
           </div>
@@ -165,7 +176,10 @@ export default function Home() {
             <button className="bg-[#327dd6] text-white px-5 py-2.5 sm:px-6 sm:py-3 rounded-lg font-semibold hover:bg-blue-600 transition-colors text-sm sm:text-base whitespace-nowrap">
               Get Started
             </button>
-            <button className="bg-white text-[#060717] px-5 py-2.5 sm:px-6 sm:py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors text-sm sm:text-base whitespace-nowrap">
+            <button 
+              className="bg-white text-[#060717] px-5 py-2.5 sm:px-6 sm:py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors text-sm sm:text-base whitespace-nowrap"
+              onClick={handleJoinUs}
+            >
               Join Us
             </button>
           </div>
