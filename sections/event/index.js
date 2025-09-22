@@ -52,7 +52,7 @@ export default function EventSection() {
 
   // Use hardcoded token for all requests
   const token =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGV4YW1wbGUuY29tIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzU4NTM3NzQ1LCJleHAiOjE3NTg1NDEzNDV9.trT1pCVTMrPqx16X7keEGn-M2DdnbxrAp9-n5uB9yG0";
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGV4YW1wbGUuY29tIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzU4NTQxNzA2LCJleHAiOjE3NTg1NDUzMDZ9.DuYRIHXINwmnYgrEc4pDxEDd4gRfSUosRtuk188bxCA";
 
   useEffect(() => {
     setIsAdmin(true); // demo admin
@@ -402,7 +402,8 @@ export default function EventSection() {
           <p className="event-cta-subtitle">
             Be part of the builder's journey.
           </p>
-          <button className="event-cta-button">Join Cloud Club</button>
+          <button className="event-cta-button">
+            <a href="https://www.meetup.com/aws-cloud-club-at-pict/" target="_blank" alt="Image not loaded">Join Cloud Club</a></button>
         </div>
       </div>
 

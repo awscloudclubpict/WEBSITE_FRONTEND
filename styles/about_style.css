@@ -7,7 +7,7 @@
 }
 
 .about-container {
-  max-width: 1200px;
+  max-width: 1170px;
   margin: 0 auto;
 }
 
@@ -165,11 +165,20 @@
   position: absolute;
   top: -25px;
   left: -25px;
-  background: #23253a;
+  background: #fff;
   border-radius: 50%;
   padding: 5px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-  border: 2px solid #327ED7;
+  border: 2px solid #fff;
+  /* aspect-ratio: 1 / 1; */
+  overflow: hidden;
+}
+
+.about-avatar img {
+  display: block;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
 }
 
 .about-timeline {

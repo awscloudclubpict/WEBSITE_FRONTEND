@@ -13,7 +13,7 @@ const TEAM_CATEGORIES = [
 ];
 
 const token =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGV4YW1wbGUuY29tIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzU4NTM3NzQ1LCJleHAiOjE3NTg1NDEzNDV9.trT1pCVTMrPqx16X7keEGn-M2DdnbxrAp9-n5uB9yG0";
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGV4YW1wbGUuY29tIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzU4NTQxNzA2LCJleHAiOjE3NTg1NDUzMDZ9.DuYRIHXINwmnYgrEc4pDxEDd4gRfSUosRtuk188bxCA";
 
 export default function Members() {
   const [activeCategory, setActiveCategory] = useState("Web Dev");

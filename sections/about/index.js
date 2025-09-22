@@ -22,7 +22,9 @@ export default function About() {
             <div className="about-stats">
               <div className="stat-item">
                 <div className="stat-content">
-                  <div className="stat-icon">👥</div>
+                  <div className="stat-icon">
+                    <img src="/tick.png" alt="Members Icon" width={40} height={40} />
+                  </div>
                   <div className="stat-text">
                     <div className="stat-number">200+</div>
                     <div className="stat-label">Club <br></br>Members</div>
@@ -31,7 +33,9 @@ export default function About() {
               </div>
               <div className="stat-item">
                 <div className="stat-content">
-                  <div className="stat-icon">✅</div>
+                  <div className="stat-icon">
+                    <img src="/certified.png" alt="Members Icon" width={40} height={40} />
+                    </div>
                   <div className="stat-text">
                     <div className="stat-number">20+</div>
                     <div className="stat-label">AWS <br></br>Certified</div>
@@ -40,7 +44,9 @@ export default function About() {
               </div>
               <div className="stat-item">
                 <div className="stat-content">
-                  <div className="stat-icon">📅</div>
+                  <div className="stat-icon">
+                    <img src="/calendar.png" alt="Members Icon" width={40} height={40} />
+                  </div>
                   <div className="stat-text">
                     <div className="stat-number">15+</div>
                     <div className="stat-label">Events<br></br> Conducted</div>
