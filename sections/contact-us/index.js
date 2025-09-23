@@ -1,9 +1,12 @@
+"use client";
 import React, { useState } from "react";
 import { Phone, Mail, MapPin } from "lucide-react";
 import { FaLinkedin, FaInstagram, FaMeetup } from "react-icons/fa";
+import emailjs from "@emailjs/browser";
 
 export default function ContactUs() {
   const [formData, setFormData] = useState({ name: "", email: "", message: "" });
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -12,8 +15,27 @@ export default function ContactUs() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    alert(`Message sent!\nName: ${formData.name}\nEmail: ${formData.email}\nMessage: ${formData.message}`);
-    setFormData({ name: "", email: "", message: "" }); // Reset form
+    setLoading(true);
+
+    emailjs
+      .send(
+        process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID,
+        process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID,
+        formData, // ✅ matches {{name}}, {{email}}, {{message}} in your template
+        process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY
+      )
+      .then((result) => {
+        alert("✅ Message sent successfully!");
+        console.log("EmailJS Result:", result.text);
+      })
+      .catch((error) => {
+        alert("❌ Failed to send message. Please try again later.");
+        console.error("EmailJS Error:", error.text || error);
+      })
+      .finally(() => {
+        setLoading(false);
+        setFormData({ name: "", email: "", message: "" }); // Reset form
+      });
   };
 
   return (
@@ -28,7 +50,7 @@ export default function ContactUs() {
       <img
         src="/image10.svg"
         alt="Cloud"
-        className="absolute -top-0 right-50 w-42 h-auto opacity-100"
+        className="absolute -top-0 right-50 w-49 h-auto opacity-100"
       />
 
       <div className="flex flex-col max-w-5xl w-full relative space-y-6">
@@ -122,9 +144,10 @@ export default function ContactUs() {
 
               <button
                 type="submit"
-                className="w-full p-3 bg-yellow-400 text-black font-bold rounded-lg"
+                className="w-full p-3 bg-yellow-400 text-black font-bold rounded-lg disabled:opacity-70"
+                disabled={loading}
               >
-                Send Message
+                {loading ? "Sending..." : "Send Message"}
               </button>
             </form>
           </div>
