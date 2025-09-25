@@ -100,7 +100,7 @@ const Blogs = () => {
 
   // Skeleton Loading Components
   const SkeletonCard = () => (
-    <div className="bg-[#060c20] rounded-2xl sm:rounded-3xl overflow-hidden flex flex-col h-full animate-pulse">
+    <div className="bg-[#060c20] rounded-2xl sm:rounded-3xl overflow-hidden flex flex-col h-full animate-pulse min-w-[280px] sm:min-w-0">
       <div className="w-full h-48 sm:h-56 md:h-64 lg:h-72 bg-[#0a0f1f] flex items-center justify-center p-4">
         <div className="w-full h-full bg-[#071128] rounded-lg"></div>
       </div>
@@ -131,6 +131,24 @@ const Blogs = () => {
           <div className="h-5 bg-[#071128] rounded w-1/4"></div>
         </div>
       </div>
+    </div>
+  );
+
+  // Horizontal scroll container for mobile
+  const HorizontalScrollContainer = ({ children, className = "" }) => (
+    <div className={`relative ${className}`}>
+      <div className="flex overflow-x-auto pb-4 -mx-4 px-4 scrollbar-hide horizontal-scroll-container">
+        <div className="flex gap-4 sm:gap-6 md:gap-8 min-w-max">
+          {children}
+        </div>
+      </div>
+    </div>
+  );
+
+  // Mobile card component for horizontal scrolling
+  const MobileBlogCard = ({ blog }) => (
+    <div className="w-[280px] flex-shrink-0">
+      <BlogCard blog={blog} onReadBlog={handleReadBlog} />
     </div>
   );
 

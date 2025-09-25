@@ -41,7 +41,7 @@ export default function Home() {
     if (element) {
       element.scrollIntoView({ behavior: "smooth" });
     }
-    setMenuOpen(false); // Close mobile menu after clicking
+    setMenuOpen(false);
   };
 
   return (
@@ -87,7 +87,7 @@ export default function Home() {
           <motion.img
             src="/images/img_th_removebg_preview.png"
             alt="AWS Cloud Club"
-            className="h-10 sm:h-12 md:h-14 cursor-pointer"
+            className="h-12 sm:h-13 md:h-15 cursor-pointer"
             onClick={() => scrollToSection("home")}
             whileHover={hoverLift}
             whileTap={{ scale: 0.95 }}
