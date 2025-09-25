@@ -13,38 +13,38 @@ export default function handler(req, res) {
     bio: "A dedicated team member",
     image: "/default-avatar.jpg",
     linkedIn: "https://linkedin.com/in/sample",
-    github: "https://github.com/sample"
+    github: "https://github.com/sample",
   };
 
   switch (method) {
-    case 'GET':
+    case "GET":
       // Get individual member
       res.status(200).json(sampleMember);
       break;
-    
-    case 'PUT':
+
+    case "PUT":
       // Update member
       const updatedMember = {
         ...sampleMember,
         ...req.body,
-        _id: id
+        _id: id,
       };
-      res.status(200).json({ 
-        message: "Member updated successfully", 
-        member: updatedMember 
+      res.status(200).json({
+        message: "Member updated successfully",
+        member: updatedMember,
       });
       break;
-    
-    case 'DELETE':
+
+    case "DELETE":
       // Delete member
-      res.status(200).json({ 
-        message: "Member deleted successfully", 
-        deletedId: id 
+      res.status(200).json({
+        message: "Member deleted successfully",
+        deletedId: id,
       });
       break;
-    
+
     default:
-      res.setHeader('Allow', ['GET', 'PUT', 'DELETE']);
+      res.setHeader("Allow", ["GET", "PUT", "DELETE"]);
       res.status(405).end(`Method ${method} Not Allowed`);
   }
 }

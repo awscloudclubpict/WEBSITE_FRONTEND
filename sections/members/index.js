@@ -1,5 +1,16 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
+import { motion } from "framer-motion";
+import {
+  fadeInUp,
+  fadeInLeft,
+  fadeInRight,
+  staggerContainer,
+  cardHover,
+  buttonHover,
+  useInView,
+  useClickAnimation,
+} from "../../utils/animations";
 
 const TEAM_CATEGORIES = [
   "Core",
@@ -29,9 +40,18 @@ export default function Members() {
     profileImage: "",
     // file: null, // For future file upload
   });
+
+  // Animation refs
+  const [headerRef, headerInView] = useInView({ threshold: 0.3 });
+  const [contentRef, contentInView] = useInView({ threshold: 0.2 });
   const [updateMember, setUpdateMember] = useState(null);
   const [members, setMembers] = useState([]);
   const [loading, setLoading] = useState(false);
+
+  // Click animation hooks
+  const addMemberAnimation = useClickAnimation(() => {
+    setShowAddModal(true);
+  }, 800);
   // const [uploading, setUploading] = useState(false); // For future file upload
 
   useEffect(() => {
@@ -42,34 +62,37 @@ export default function Members() {
   const fetchMembers = async (category) => {
     try {
       setLoading(true);
-      let url = "http://localhost:3001/team-members";
+      let url = "http://localhost:3001/api/team-members";
       switch (category) {
         case "Core":
-          url = "http://localhost:3001/team-members/core";
+          url = "http://localhost:3001/api/team-members/department/core";
           break;
         case "Tech Team":
-          url = "http://localhost:3001/team-members/tech-team";
+          url = "http://localhost:3001/api/team-members/department/tech-team";
           break;
         case "Web Dev":
-          url = "http://localhost:3001/team-members/web-dev";
+          url = "http://localhost:3001/api/team-members/department/web-dev";
           break;
         case "Event Management":
-          url = "http://localhost:3001/team-members/event-management";
+          url =
+            "http://localhost:3001/api/team-members/department/event-management";
           break;
         case "Design":
-          url = "http://localhost:3001/team-members/design";
+          url = "http://localhost:3001/api/team-members/department/design";
           break;
         case "Social Media":
-          url = "http://localhost:3001/team-members/social-media";
+          url =
+            "http://localhost:3001/api/team-members/department/social-media";
           break;
         case "Documentation":
-          url = "http://localhost:3001/team-members/documentation";
+          url =
+            "http://localhost:3001/api/team-members/department/documentation";
           break;
         case "Tech+Blog":
-          url = "http://localhost:3001/team-members/tech-blog";
+          url = "http://localhost:3001/api/team-members/department/tech-blog";
           break;
         default:
-          url = "http://localhost:3001/team-members";
+          url = "http://localhost:3001/api/team-members";
       }
       const res = await fetch(url, {
         headers: {
@@ -109,7 +132,7 @@ export default function Members() {
         linkedinLink: newMember.linkedinLink,
         profileImage: newMember.profileImage,
       };
-      const res = await fetch("http://localhost:3001/team-members", {
+      const res = await fetch("http://localhost:3001/api/team-members", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -162,14 +185,17 @@ export default function Members() {
         linkedinLink: updateMember.linkedinLink,
         profileImage: updateMember.previewImage,
       };
-      const res = await fetch(`http://localhost:3001/team-members/${updateMember._id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(payload),
-      });
+      const res = await fetch(
+        `http://localhost:3001/api/team-members/${updateMember._id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(payload),
+        }
+      );
       if (!res.ok) throw new Error("Failed to update member");
       await fetchMembers(activeCategory);
       setShowUpdateModal(false);
@@ -184,7 +210,7 @@ export default function Members() {
   const handleDeleteMember = async (id) => {
     if (!confirm("Are you sure?")) return;
     try {
-      const res = await fetch(`http://localhost:3001/team-members/${id}`, {
+      const res = await fetch(`http://localhost:3001/api/team-members/${id}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -196,37 +222,82 @@ export default function Members() {
   };
 
   return (
-    <section className="members-section">
-      <div className="members-container">
-        <h2 className="members-title">Meet the Team</h2>
-        <p className="members-subtitle">Passionate. Skilled. United.</p>
-        <div className="members-categories">
-          {TEAM_CATEGORIES.map((cat) => (
-            <button
+    <motion.section
+      className="members-section"
+      initial="hidden"
+      animate="visible"
+      variants={fadeInUp}
+    >
+      <motion.div
+        className="members-container"
+        ref={contentRef}
+        initial="hidden"
+        animate={contentInView ? "visible" : "hidden"}
+        variants={staggerContainer}
+      >
+        <motion.h2
+          className="members-title"
+          ref={headerRef}
+          initial="hidden"
+          animate={headerInView ? "visible" : "hidden"}
+          variants={fadeInUp}
+        >
+          Meet the Team
+        </motion.h2>
+        <motion.p className="members-subtitle" variants={fadeInUp}>
+          Passionate. Skilled. United.
+        </motion.p>
+        <motion.div className="members-categories" variants={staggerContainer}>
+          {TEAM_CATEGORIES.map((cat, index) => (
+            <motion.button
               key={cat}
-              className={`members-category-btn ${activeCategory === cat ? "active" : ""}`}
+              className={`members-category-btn ${
+                activeCategory === cat ? "active" : ""
+              }`}
               onClick={() => setActiveCategory(cat)}
+              variants={buttonHover}
+              whileHover="hover"
+              whileTap="tap"
+              custom={index}
             >
               {cat}
-            </button>
+            </motion.button>
           ))}
           {isAdmin && (
-            <button
-              className="members-category-btn add-btn"
-              onClick={() => setShowAddModal(true)}
+            <motion.button
+              className={`members-category-btn add-btn ${addMemberAnimation.className}`}
+              onClick={addMemberAnimation.handleClick}
+              variants={buttonHover}
+              whileHover={!addMemberAnimation.isLoading ? "hover" : {}}
+              whileTap={!addMemberAnimation.isLoading ? "tap" : {}}
+              disabled={addMemberAnimation.isLoading}
             >
-              + Add Member
-            </button>
+              {addMemberAnimation.isLoading ? "Opening..." : "+ Add Member"}
+            </motion.button>
           )}
-        </div>
-        <div className="members-list">
+        </motion.div>
+        <motion.div
+          className="members-list"
+          variants={staggerContainer}
+          initial="hidden"
+          animate={contentInView ? "visible" : "hidden"}
+        >
           {loading ? (
             <div className="members-empty">Loading...</div>
           ) : members.length === 0 ? (
             <div className="members-empty">No members found.</div>
           ) : (
-            members.map((member) => (
-              <div key={member._id} className="member-card">
+            members.map((member, index) => (
+              <motion.div
+                key={member._id}
+                className="member-card"
+                variants={cardHover}
+                whileHover="hover"
+                whileTap="tap"
+                initial="hidden"
+                animate="visible"
+                custom={index}
+              >
                 <div className="member-image-wrapper">
                   {member.profileImage ? (
                     <img
@@ -252,54 +323,99 @@ export default function Members() {
                 </div>
                 <div className="member-socials">
                   {member.githubLink && (
-                    <a href={member.githubLink} target="_blank" rel="noopener noreferrer">
-                      <Image src="/github-icon.svg" alt="GitHub" width={36} height={36} />
+                    <a
+                      href={member.githubLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <Image
+                        src="/github-icon.svg"
+                        alt="GitHub"
+                        width={36}
+                        height={36}
+                      />
                     </a>
                   )}
                   {member.linkedinLink && (
-                    <a href={member.linkedinLink} target="_blank" rel="noopener noreferrer">
-                      <Image src="/linkedin-icon.svg" alt="LinkedIn" width={36} height={36} />
+                    <a
+                      href={member.linkedinLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <Image
+                        src="/linkedin-icon.svg"
+                        alt="LinkedIn"
+                        width={36}
+                        height={36}
+                      />
                     </a>
                   )}
                 </div>
                 {isAdmin && (
                   <div className="member-actions">
-                    <button onClick={() => openUpdateModal(member)}>Update</button>
-                    <button onClick={() => handleDeleteMember(member._id)}>Delete</button>
+                    <button onClick={() => openUpdateModal(member)}>
+                      Update
+                    </button>
+                    <button onClick={() => handleDeleteMember(member._id)}>
+                      Delete
+                    </button>
                   </div>
                 )}
-              </div>
+              </motion.div>
             ))
           )}
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
       {/* Add Member Modal */}
       {showAddModal && (
         <div className="members-modal-overlay">
           <div className="members-modal">
             <div className="members-modal-header">
               <h3>Add New Team Member</h3>
-              <button className="members-modal-close" onClick={() => setShowAddModal(false)}>
+              <button
+                className="members-modal-close"
+                onClick={() => setShowAddModal(false)}
+              >
                 &times;
               </button>
             </div>
-            <form className="members-modal-form members-modal-form-grid" onSubmit={handleAddMember}>
+            <form
+              className="members-modal-form members-modal-form-grid"
+              onSubmit={handleAddMember}
+            >
               <div className="form-row">
                 <div className="form-group">
                   <label>Name</label>
-                  <input name="name" value={newMember.name} onChange={handleInputChange} required />
+                  <input
+                    name="name"
+                    value={newMember.name}
+                    onChange={handleInputChange}
+                    required
+                  />
                 </div>
                 <div className="form-group">
                   <label>Role</label>
-                  <input name="role" value={newMember.role} onChange={handleInputChange} required />
+                  <input
+                    name="role"
+                    value={newMember.role}
+                    onChange={handleInputChange}
+                    required
+                  />
                 </div>
               </div>
               <div className="form-row">
                 <div className="form-group">
                   <label>Team</label>
-                  <select name="team" value={newMember.team} onChange={handleInputChange} required>
+                  <select
+                    name="team"
+                    value={newMember.team}
+                    onChange={handleInputChange}
+                    required
+                  >
                     {TEAM_CATEGORIES.map((cat) => (
-                      <option key={cat} value={cat}>{cat}</option>
+                      <option key={cat} value={cat}>
+                        {cat}
+                      </option>
                     ))}
                   </select>
                 </div>
@@ -323,15 +439,29 @@ export default function Members() {
               <div className="form-row">
                 <div className="form-group">
                   <label>GitHub</label>
-                  <input name="githubLink" value={newMember.githubLink} onChange={handleInputChange} />
+                  <input
+                    name="githubLink"
+                    value={newMember.githubLink}
+                    onChange={handleInputChange}
+                  />
                 </div>
                 <div className="form-group">
                   <label>LinkedIn</label>
-                  <input name="linkedinLink" value={newMember.linkedinLink} onChange={handleInputChange} />
+                  <input
+                    name="linkedinLink"
+                    value={newMember.linkedinLink}
+                    onChange={handleInputChange}
+                  />
                 </div>
               </div>
               <div className="form-actions">
-                <button type="button" className="btn-cancel" onClick={() => setShowAddModal(false)}>Cancel</button>
+                <button
+                  type="button"
+                  className="btn-cancel"
+                  onClick={() => setShowAddModal(false)}
+                >
+                  Cancel
+                </button>
                 <button type="submit" className="btn-submit">
                   Add Member
                 </button>
@@ -346,27 +476,50 @@ export default function Members() {
           <div className="members-modal">
             <div className="members-modal-header">
               <h3>Update Team Member</h3>
-              <button className="members-modal-close" onClick={() => setShowUpdateModal(false)}>
+              <button
+                className="members-modal-close"
+                onClick={() => setShowUpdateModal(false)}
+              >
                 &times;
               </button>
             </div>
-            <form className="members-modal-form members-modal-form-grid" onSubmit={handleUpdateMember}>
+            <form
+              className="members-modal-form members-modal-form-grid"
+              onSubmit={handleUpdateMember}
+            >
               <div className="form-row">
                 <div className="form-group">
                   <label>Name</label>
-                  <input name="name" value={updateMember.name} onChange={handleUpdateInputChange} required />
+                  <input
+                    name="name"
+                    value={updateMember.name}
+                    onChange={handleUpdateInputChange}
+                    required
+                  />
                 </div>
                 <div className="form-group">
                   <label>Role</label>
-                  <input name="role" value={updateMember.role} onChange={handleUpdateInputChange} required />
+                  <input
+                    name="role"
+                    value={updateMember.role}
+                    onChange={handleUpdateInputChange}
+                    required
+                  />
                 </div>
               </div>
               <div className="form-row">
                 <div className="form-group">
                   <label>Team</label>
-                  <select name="team" value={updateMember.team} onChange={handleUpdateInputChange} required>
+                  <select
+                    name="team"
+                    value={updateMember.team}
+                    onChange={handleUpdateInputChange}
+                    required
+                  >
                     {TEAM_CATEGORIES.map((cat) => (
-                      <option key={cat} value={cat}>{cat}</option>
+                      <option key={cat} value={cat}>
+                        {cat}
+                      </option>
                     ))}
                   </select>
                 </div>
@@ -390,15 +543,29 @@ export default function Members() {
               <div className="form-row">
                 <div className="form-group">
                   <label>GitHub</label>
-                  <input name="githubLink" value={updateMember.githubLink} onChange={handleUpdateInputChange} />
+                  <input
+                    name="githubLink"
+                    value={updateMember.githubLink}
+                    onChange={handleUpdateInputChange}
+                  />
                 </div>
                 <div className="form-group">
                   <label>LinkedIn</label>
-                  <input name="linkedinLink" value={updateMember.linkedinLink} onChange={handleUpdateInputChange} />
+                  <input
+                    name="linkedinLink"
+                    value={updateMember.linkedinLink}
+                    onChange={handleUpdateInputChange}
+                  />
                 </div>
               </div>
               <div className="form-actions">
-                <button type="button" className="btn-cancel" onClick={() => setShowUpdateModal(false)}>Cancel</button>
+                <button
+                  type="button"
+                  className="btn-cancel"
+                  onClick={() => setShowUpdateModal(false)}
+                >
+                  Cancel
+                </button>
                 <button type="submit" className="btn-submit">
                   Update Member
                 </button>
@@ -407,6 +574,6 @@ export default function Members() {
           </div>
         </div>
       )}
-    </section>
+    </motion.section>
   );
 }

@@ -51,7 +51,7 @@
 }
 
 .event-gradient-text {
-  background: linear-gradient(135deg, #0F2655 0%, #9E53D1 100%);
+  background: linear-gradient(135deg, #0f2655 0%, #9e53d1 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -75,7 +75,7 @@
   padding: 0.75rem 1.5rem;
   border-radius: 10px;
   font-weight: 700;
-  font-size:1rem;
+  font-size: 1rem;
   transition: all 0.3s;
 }
 
@@ -85,12 +85,12 @@
 }
 
 .filter-button-active {
-  background: linear-gradient(135deg, #0F2655 30%, #9E53D1 100%);
+  background: linear-gradient(135deg, #0f2655 30%, #9e53d1 100%);
   color: white;
 }
 
 .filter-button-add {
-  background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%) !important;
+  background: linear-gradient(135deg, #4caf50 0%, #45a049 100%) !important;
   color: white;
 }
 
@@ -133,7 +133,8 @@
   background-color: #091734;
   padding: 0.75rem;
   border-radius: 9999px;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
 
 .carousel-arrow-left {
@@ -195,7 +196,7 @@
 }
 
 .event-date-box {
-  background: linear-gradient(135deg, #0F2655 0%, #9E53D1 100%);
+  background: linear-gradient(135deg, #0f2655 0%, #9e53d1 100%);
   color: white;
   width: 4rem;
   height: 4rem;
@@ -251,7 +252,7 @@
   width: 1.25rem;
   height: 1.25rem;
   border-radius: 9999px;
-  background-color: #327ED7;
+  background-color: #327ed7;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -270,7 +271,7 @@
 }
 
 .event-register-button {
-  color: #F4B631;
+  color: #f4b631;
   font-weight: 500;
   font-size: 0.875rem;
 }
@@ -304,7 +305,7 @@
 }
 
 .event-cta-button {
-  background-color: #F4B631;
+  background-color: #f4b631;
   color: black;
   font-size: 1.125rem;
   font-weight: 500;
@@ -314,7 +315,7 @@
 }
 
 .event-cta-button:hover {
-  background-color: #E5A82B;
+  background-color: #e5a82b;
 }
 
 /* Event Form Styles */
@@ -341,7 +342,7 @@
   max-height: 90vh;
   overflow-y: auto;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-  border: 1px solid #327ED7;
+  border: 1px solid #327ed7;
 }
 
 .event-form-header {
@@ -350,14 +351,14 @@
   align-items: center;
   margin-bottom: 1.5rem;
   padding-bottom: 1rem;
-  border-bottom: 1px solid #327ED7;
+  border-bottom: 1px solid #327ed7;
 }
 
 .event-form-header h2 {
   color: white;
   font-size: 1.8rem;
   margin: 0;
-  background: linear-gradient(135deg, #9E53D1 0%, #327ED7 100%);
+  background: linear-gradient(135deg, #9e53d1 0%, #327ed7 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -418,7 +419,7 @@
 .form-group textarea {
   padding: 0.75rem;
   border-radius: 8px;
-  border: 1px solid #327ED7;
+  border: 1px solid #327ed7;
   background-color: rgba(6, 7, 23, 0.6);
   color: white;
   font-size: 1rem;
@@ -429,7 +430,7 @@
 .form-group select:focus,
 .form-group textarea:focus {
   outline: none;
-  border-color: #9E53D1;
+  border-color: #9e53d1;
   box-shadow: 0 0 0 2px rgba(158, 83, 209, 0.2);
 }
 
@@ -444,7 +445,7 @@
   gap: 1rem;
   margin-top: 1rem;
   padding-top: 1.5rem;
-  border-top: 1px solid #327ED7;
+  border-top: 1px solid #327ed7;
 }
 
 .btn-cancel,
@@ -459,8 +460,8 @@
 
 .btn-cancel {
   background-color: transparent;
-  color: #9E53D1;
-  border: 1px solid #9E53D1;
+  color: #9e53d1;
+  border: 1px solid #9e53d1;
 }
 
 .btn-cancel:hover {
@@ -468,13 +469,55 @@
 }
 
 .btn-submit {
-  background: linear-gradient(135deg, #0F2655 0%, #9E53D1 100%);
+  background: linear-gradient(135deg, #0f2655 0%, #9e53d1 100%);
   color: white;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-submit::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  animation: submitButtonShimmer 3s ease-in-out infinite;
+  z-index: 1;
 }
 
 .btn-submit:hover {
-  opacity: 0.9;
+  background: linear-gradient(135deg, #9e53d1 0%, #0f2655 100%);
   transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(158, 83, 209, 0.4);
+}
+
+@keyframes submitButtonShimmer {
+  0% {
+    left: -100%;
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  50% {
+    left: 100%;
+    opacity: 1;
+  }
+  60% {
+    opacity: 0;
+  }
+  100% {
+    left: 100%;
+    opacity: 0;
+  }
 }
 
 .file-input-label {
@@ -484,20 +527,20 @@
 
 .file-input-hint {
   font-size: 0.8rem;
-  color: #9E53D1;
+  color: #9e53d1;
   margin-left: 0.5rem;
   font-style: italic;
 }
 
 .file-input {
   padding: 0.5rem;
-  border: 1px dashed #327ED7;
+  border: 1px dashed #327ed7;
   border-radius: 8px;
   background-color: rgba(6, 7, 23, 0.3);
 }
 
 .file-input::file-selector-button {
-  background: linear-gradient(135deg, #0F2655 0%, #9E53D1 100%);
+  background: linear-gradient(135deg, #0f2655 0%, #9e53d1 100%);
   color: white;
   padding: 0.5rem 1rem;
   border: none;
@@ -520,8 +563,12 @@
 }
 
 @keyframes skeleton-loading {
-  0% { opacity: 0.7; }
-  100% { opacity: 1; }
+  0% {
+    opacity: 0.7;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 .skeleton-date {
@@ -569,4 +616,3 @@
   background: #23253a;
   border-radius: 18px;
 }
-

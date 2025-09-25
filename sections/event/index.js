@@ -1,5 +1,17 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  useInView,
+  fadeInUp,
+  fadeInLeft,
+  fadeInRight,
+  staggerContainer,
+  scaleIn,
+  hoverLift,
+  cardHover,
+  buttonHover,
+} from "../../utils/animations";
 
 function EventSkeleton({ count = 2 }) {
   return (
@@ -35,6 +47,10 @@ export default function EventSection() {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(false);
 
+  // Animation refs
+  const [headerRef, headerInView] = useInView({ threshold: 0.3 });
+  const [contentRef, contentInView] = useInView({ threshold: 0.2 });
+
   // New event form state (includes all fields, but some ignored in POST)
   const [newEvent, setNewEvent] = useState({
     event_id: "",
@@ -62,9 +78,9 @@ export default function EventSection() {
   const fetchEvents = async (category = "All") => {
     try {
       setLoading(true);
-      let url = "http://localhost:3001/events";
+      let url = "http://localhost:3001/api/events";
       if (category !== "All") {
-        url = `http://localhost:3001/events/category/${category.toLowerCase()}`;
+        url = `http://localhost:3001/api/events/category/${category.toLowerCase()}`;
       }
 
       const res = await fetch(url, {
@@ -203,7 +219,7 @@ export default function EventSection() {
     };
 
     try {
-      const res = await fetch("http://localhost:3001/events/create", {
+      const res = await fetch("http://localhost:3001/api/events/create", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -238,20 +254,40 @@ export default function EventSection() {
   };
 
   return (
-    <section className="event-section">
-      <div className="event-container">
+    <motion.section
+      className="event-section"
+      initial="hidden"
+      animate="visible"
+      variants={fadeInUp}
+    >
+      <motion.div
+        className="event-container"
+        ref={contentRef}
+        initial="hidden"
+        animate={contentInView ? "visible" : "hidden"}
+        variants={staggerContainer}
+      >
         {/* Header */}
-        <div className="event-header">
-          <div className="event-header-content">
-            <h2 className="event-title">
+        <motion.div
+          className="event-header"
+          ref={headerRef}
+          initial="hidden"
+          animate={headerInView ? "visible" : "hidden"}
+          variants={staggerContainer}
+        >
+          <motion.div className="event-header-content" variants={fadeInUp}>
+            <motion.h2 className="event-title" variants={fadeInUp}>
               Explore Our <span className="event-gradient-text">Events</span>
-            </h2>
+            </motion.h2>
             <p className="event-subtitle">
               Stay tuned with workshops, webinars, and cloud camps.
             </p>
-            <div className="filter-container">
-              {["All", "Workshop", "Webinar"].map((filter) => (
-                <button
+            <motion.div
+              className="filter-container"
+              variants={staggerContainer}
+            >
+              {["All", "Workshop", "Webinar"].map((filter, index) => (
+                <motion.button
                   key={filter}
                   className={`filter-button ${
                     activeFilter === filter
@@ -259,21 +295,28 @@ export default function EventSection() {
                       : "filter-button-inactive"
                   }`}
                   onClick={() => setActiveFilter(filter)}
+                  variants={buttonHover}
+                  whileHover="hover"
+                  whileTap="tap"
+                  custom={index}
                 >
                   {filter}
-                </button>
+                </motion.button>
               ))}
               {isAdmin && (
-                <button
+                <motion.button
                   className="filter-button filter-button-add"
                   onClick={() => setShowAddEventModal(true)}
+                  variants={buttonHover}
+                  whileHover="hover"
+                  whileTap="tap"
                 >
                   + Add Event
-                </button>
+                </motion.button>
               )}
-            </div>
-          </div>
-          <div className="event-image-container">
+            </motion.div>
+          </motion.div>
+          <motion.div className="event-image-container" variants={fadeInRight}>
             <div className="event-image">
               <Image
                 src="/calendar-cloud.png"
@@ -283,12 +326,17 @@ export default function EventSection() {
                 priority
               />
             </div>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
 
         {/* Events Carousel */}
-        <div className="event-carousel">
-          <button
+        <motion.div
+          className="event-carousel"
+          variants={fadeInUp}
+          initial="hidden"
+          animate={contentInView ? "visible" : "hidden"}
+        >
+          <motion.button
             onClick={() => scrollCarousel("left")}
             disabled={isLeftDisabled}
             className={`carousel-arrow carousel-arrow-left ${
@@ -296,6 +344,9 @@ export default function EventSection() {
                 ? "carousel-arrow-disabled"
                 : "carousel-arrow-enabled"
             }`}
+            variants={buttonHover}
+            whileHover={!isLeftDisabled ? "hover" : {}}
+            whileTap={!isLeftDisabled ? "tap" : {}}
           >
             <svg
               className="w-6 h-6 text-white"
@@ -311,13 +362,13 @@ export default function EventSection() {
                 d="M15 19l-7-7 7-7"
               ></path>
             </svg>
-          </button>
+          </motion.button>
 
           {loading ? (
             <EventSkeleton count={visibleEvents} />
           ) : (
             <div className="carousel-container">
-              {getCurrentEvents().map((event) => {
+              {getCurrentEvents().map((event, index) => {
                 const { day, month } = formatDate(event.date);
 
                 // Show "Register" for all events today or in the future
@@ -330,7 +381,16 @@ export default function EventSection() {
                 const isPast = eventDate < today;
 
                 return (
-                  <div key={event.event_id} className="event-card">
+                  <motion.div
+                    key={event.event_id}
+                    className="event-card"
+                    variants={cardHover}
+                    whileHover="hover"
+                    whileTap="tap"
+                    initial="hidden"
+                    animate="visible"
+                    custom={index}
+                  >
                     <div className="event-card-inner">
                       {/* Past Event Label */}
                       {isPast && <div className="event-past-label">PAST</div>}
@@ -373,13 +433,13 @@ export default function EventSection() {
                         </div>
                       </div>
                     </div>
-                  </div>
+                  </motion.div>
                 );
               })}
             </div>
           )}
 
-          <button
+          <motion.button
             onClick={() => scrollCarousel("right")}
             disabled={isRightDisabled}
             className={`carousel-arrow carousel-arrow-right ${
@@ -387,6 +447,9 @@ export default function EventSection() {
                 ? "carousel-arrow-disabled"
                 : "carousel-arrow-enabled"
             }`}
+            variants={buttonHover}
+            whileHover={!isRightDisabled ? "hover" : {}}
+            whileTap={!isRightDisabled ? "tap" : {}}
           >
             <svg
               className="w-6 h-6 text-white"
@@ -402,21 +465,38 @@ export default function EventSection() {
                 d="M9 5l7 7-7 7"
               ></path>
             </svg>
-          </button>
-        </div>
+          </motion.button>
+        </motion.div>
 
         {/* CTA */}
-        <div className="event-cta">
-          <h1 className="event-cta-title">
+        <motion.div
+          className="event-cta"
+          variants={fadeInUp}
+          initial="hidden"
+          animate={contentInView ? "visible" : "hidden"}
+        >
+          <motion.h1 className="event-cta-title" variants={fadeInUp}>
             Don't miss our next hands-on event!
-          </h1>
-          <p className="event-cta-subtitle">
+          </motion.h1>
+          <motion.p className="event-cta-subtitle" variants={fadeInUp}>
             Be part of the builder's journey.
-          </p>
-          <button className="event-cta-button">
-            <a href="https://www.meetup.com/aws-cloud-club-at-pict/" target="_blank" alt="Image not loaded">Join Cloud Club</a></button>
-        </div>
-      </div>
+          </motion.p>
+          <motion.button
+            className="event-cta-button"
+            variants={buttonHover}
+            whileHover="hover"
+            whileTap="tap"
+          >
+            <a
+              href="https://www.meetup.com/aws-cloud-club-at-pict/"
+              target="_blank"
+              alt="Image not loaded"
+            >
+              Join Cloud Club
+            </a>
+          </motion.button>
+        </motion.div>
+      </motion.div>
 
       {/* Add Event Modal */}
       {showAddEventModal && (
@@ -603,6 +683,6 @@ export default function EventSection() {
           </div>
         </div>
       )}
-    </section>
+    </motion.section>
   );
 }

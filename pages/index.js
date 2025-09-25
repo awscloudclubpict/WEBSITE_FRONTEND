@@ -19,11 +19,16 @@ export default function Home() {
   return (
     <div
       className={`w-auto h-auto`}
+      style={{
+        // Prevent initial scrollbar jump
+        minHeight: "100vh",
+        willChange: "auto",
+      }}
     >
       <HomeSection />
       <AboutSection />
       <BlogSection />
-      <EventSection />  
+      <EventSection />
       <MemberSection />
       {/* <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
         <Image

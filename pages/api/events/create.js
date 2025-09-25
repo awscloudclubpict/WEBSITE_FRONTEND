@@ -2,8 +2,8 @@
 export default function handler(req, res) {
   const { method } = req;
 
-  if (method !== 'POST') {
-    res.setHeader('Allow', ['POST']);
+  if (method !== "POST") {
+    res.setHeader("Allow", ["POST"]);
     return res.status(405).end(`Method ${method} Not Allowed`);
   }
 
@@ -13,17 +13,17 @@ export default function handler(req, res) {
       _id: Date.now().toString(),
       ...req.body,
       registeredCount: 0,
-      createdAt: new Date().toISOString()
+      createdAt: new Date().toISOString(),
     };
 
-    res.status(201).json({ 
-      message: "Event created successfully", 
-      event: newEvent 
+    res.status(201).json({
+      message: "Event created successfully",
+      event: newEvent,
     });
   } catch (error) {
-    res.status(500).json({ 
-      message: "Error creating event", 
-      error: error.message 
+    res.status(500).json({
+      message: "Error creating event",
+      error: error.message,
     });
   }
 }
