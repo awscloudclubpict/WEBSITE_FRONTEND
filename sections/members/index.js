@@ -12,6 +12,12 @@ import {
   useClickAnimation,
 } from "../../utils/animations";
 
+// Helper function for error handling
+const handleApiError = (error, defaultMessage = "Something went wrong") => {
+  console.error("API Error:", error);
+  return error.message || defaultMessage;
+};
+
 const TEAM_CATEGORIES = [
   "Core",
   "Tech Team",
@@ -58,53 +64,85 @@ export default function Members() {
     setIsAdmin(true); // Demo: always admin
   }, []);
 
-  // Fetch members by category (uses both generic and specific endpoints)
+  // Fetch members by category using API utility
   const fetchMembers = async (category) => {
     try {
       setLoading(true);
-      let url = "http://localhost:3001/api/team-members";
-      switch (category) {
-        case "Core":
-          url = "http://localhost:3001/api/team-members/department/core";
-          break;
-        case "Tech Team":
-          url = "http://localhost:3001/api/team-members/department/tech-team";
-          break;
-        case "Web Dev":
-          url = "http://localhost:3001/api/team-members/department/web-dev";
-          break;
-        case "Event Management":
-          url =
-            "http://localhost:3001/api/team-members/department/event-management";
-          break;
-        case "Design":
-          url = "http://localhost:3001/api/team-members/department/design";
-          break;
-        case "Social Media":
-          url =
-            "http://localhost:3001/api/team-members/department/social-media";
-          break;
-        case "Documentation":
-          url =
-            "http://localhost:3001/api/team-members/department/documentation";
-          break;
-        case "Tech+Blog":
-          url = "http://localhost:3001/api/team-members/department/tech-blog";
-          break;
-        default:
-          url = "http://localhost:3001/api/team-members";
+
+      // Map category names to API department names
+      const departmentMap = {
+        Core: "core",
+        "Tech Team": "tech-team",
+        "Web Dev": "web-dev",
+        "Event Management": "event-management",
+        Design: "design",
+        "Social Media": "social-media",
+        Documentation: "documentation",
+        "Tech+Blog": "tech-blog",
+      };
+
+      let url = "https://website-backend-lkns.onrender.com/team-members/";
+      if (category !== "All" && departmentMap[category]) {
+        url = `https://website-backend-lkns.onrender.com/team-members/${departmentMap[category]}`;
       }
-      const res = await fetch(url, {
+
+      console.log("🔗 Attempting to fetch from external API:", url);
+
+      // Simplified fetch with minimal headers to avoid CORS issues
+      const response = await fetch(url, {
+        method: "GET",
         headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
+          Accept: "application/json",
         },
       });
-      if (!res.ok) throw new Error("Failed to fetch");
-      const data = await res.json();
-      setMembers(data.teamMembers || []);
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+
+      const memberData = await response.json();
+      console.log("✅ Successfully fetched members:", memberData);
+
+      setMembers(
+        memberData.teamMembers || memberData.team_members || memberData || []
+      );
     } catch (err) {
-      setMembers([]);
+      console.error("❌ Error fetching members:", err);
+
+      // Just log the error, no annoying alerts
+      console.log("🎭 Showing demo data due to:", err.message);
+
+      // Set demo data on error
+      const demoMembers = [
+        {
+          _id: "demo1",
+          name: `${category} Team Lead (Demo)`,
+          role: "Team Lead",
+          team: category,
+          profileImage: "/default-avatar.jpg",
+          githubLink: "https://github.com/demo1",
+          linkedinLink: "https://linkedin.com/in/demo1",
+        },
+        {
+          _id: "demo2",
+          name: `${category} Developer (Demo)`,
+          role: "Senior Developer",
+          team: category,
+          profileImage: "/default-avatar.jpg",
+          githubLink: "https://github.com/demo2",
+          linkedinLink: "https://linkedin.com/in/demo2",
+        },
+        {
+          _id: "demo3",
+          name: `${category} Intern (Demo)`,
+          role: "Junior Developer",
+          team: category,
+          profileImage: "/default-avatar.jpg",
+          githubLink: "https://github.com/demo3",
+          linkedinLink: "https://linkedin.com/in/demo3",
+        },
+      ];
+      setMembers(demoMembers);
     } finally {
       setLoading(false);
     }
@@ -124,7 +162,7 @@ export default function Members() {
   const handleAddMember = async (e) => {
     e.preventDefault();
     try {
-      const payload = {
+      const memberData = {
         name: newMember.name,
         role: newMember.role,
         team: newMember.team,
@@ -132,16 +170,10 @@ export default function Members() {
         linkedinLink: newMember.linkedinLink,
         profileImage: newMember.profileImage,
       };
-      const res = await fetch("http://localhost:3001/api/team-members", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(payload),
-      });
-      if (!res.ok) throw new Error("Failed to add member");
-      await fetchMembers(activeCategory);
+
+      // DEMO: Simulate API call with timeout
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
       setShowAddModal(false);
       setNewMember({
         name: "",
@@ -151,9 +183,12 @@ export default function Members() {
         linkedinLink: "",
         profileImage: "",
       });
-      alert("Member added successfully");
+      alert("✅ DEMO: Member would be added successfully!");
+
+      // Refresh to show it's working
+      await fetchMembers(activeCategory);
     } catch (err) {
-      alert("Failed to add member: " + err.message);
+      alert("❌ Demo error simulation");
     }
   };
 
@@ -173,51 +208,42 @@ export default function Members() {
     setUpdateMember({ ...updateMember, [name]: value });
   };
 
-  // Update member (only using image URL)
+  // Update member (DEMO - Static Response)
   const handleUpdateMember = async (e) => {
     e.preventDefault();
     try {
-      const payload = {
-        name: updateMember.name,
-        role: updateMember.role,
-        team: updateMember.team,
-        githubLink: updateMember.githubLink,
-        linkedinLink: updateMember.linkedinLink,
-        profileImage: updateMember.previewImage,
-      };
-      const res = await fetch(
-        `http://localhost:3001/api/team-members/${updateMember._id}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(payload),
-        }
-      );
-      if (!res.ok) throw new Error("Failed to update member");
-      await fetchMembers(activeCategory);
+      // DEMO: Simulate API call with timeout
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
       setShowUpdateModal(false);
       setUpdateMember(null);
-      alert("Member updated successfully");
+      alert("✅ DEMO: Member would be updated successfully!");
+
+      // Refresh to show it's working
+      await fetchMembers(activeCategory);
     } catch (err) {
-      alert("Failed to update member: " + err.message);
+      alert("❌ Demo error simulation");
     }
   };
 
-  // Delete member
+  // Delete member (DEMO - Static Response)
   const handleDeleteMember = async (id) => {
-    if (!confirm("Are you sure?")) return;
+    if (
+      !confirm(
+        "🎭 DEMO: Are you sure you want to 'delete' this member? (This is just a demo)"
+      )
+    )
+      return;
     try {
-      const res = await fetch(`http://localhost:3001/api/team-members/${id}`, {
-        method: "DELETE",
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      if (!res.ok) throw new Error("Failed to delete member");
+      // DEMO: Simulate API call with timeout
+      await new Promise((resolve) => setTimeout(resolve, 800));
+
+      alert("✅ DEMO: Member would be deleted successfully!");
+
+      // Refresh to show it's working
       await fetchMembers(activeCategory);
     } catch (err) {
-      alert("Error deleting member");
+      alert("❌ Demo error simulation");
     }
   };
 

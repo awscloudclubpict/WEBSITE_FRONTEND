@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useRouter } from "next/router";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   useInView,
@@ -14,6 +15,7 @@ import {
 } from "../../utils/animations";
 
 export default function Home() {
+  const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
   const [navRef, navInView] = useInView({ threshold: 0.1 });
   const [heroRef, heroInView] = useInView({ threshold: 0.2 });
@@ -29,10 +31,8 @@ export default function Home() {
   );
 
   const getStartedAnimation = useClickAnimation(() => {
-    const element = document.getElementById("about");
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
-    }
+    // Redirect to student signup page
+    router.push("/sign-up-student");
   }, 1000);
 
   // Function to handle smooth scrolling to sections

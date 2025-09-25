@@ -1,0 +1,137 @@
+.pageWrapper {
+  font-family: "Inter", sans-serif;
+  background-color: #0b1527;
+  color: #e0e0e0;
+  margin: 0;
+  min-height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.logoContainer {
+  position: fixed;
+  top: 40px;
+  left: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  z-index: 2;
+}
+.logoContainer span {
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #fff;
+}
+.logoContainer :global(img) {
+  height: 90px;
+  width: auto;
+}
+.mainContainer {
+  background-color: #0b1527;
+  padding: 60px 40px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  max-width: 450px;
+  width: 90%;
+  text-align: left;
+  z-index: 1;
+}
+.illustrationContainer {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  max-width: 40%;
+  height: 418px;
+  width: 460px;
+  z-index: 0;
+}
+.illustrationContainer :global(img) {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+.header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+.headerText {
+  font-size: 38px;
+  color: #fff;
+  margin: 0;
+}
+.subtitle {
+  color: #007bff;
+  font-size: 18px;
+  margin: 0;
+}
+.formGroup {
+  margin-bottom: 20px;
+}
+.formGroup label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+  color: #e0e0e0;
+}
+.darkInput {
+  width: 100%;
+  padding: 15px;
+  background-color: #1a233b;
+  border: 1px solid #3d4b68;
+  border-radius: 5px;
+  color: #e0e0e0;
+  box-sizing: border-box;
+  font-size: 16px;
+}
+.darkInput::placeholder {
+  color: #8c96b0;
+}
+.darkInput:focus {
+  outline: none;
+  border-color: #007bff;
+}
+.signUpButton {
+  width: 100%;
+  padding: 18px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+.signUpButton:hover {
+  background-color: #0056b3;
+}
+.loginLink {
+  text-align: center;
+  margin-top: 25px;
+}
+.loginLink a {
+  color: #007bff;
+  text-decoration: none;
+  font-weight: bold;
+}
+.loginLink a:hover {
+  text-decoration: underline;
+}
+@media (max-width: 768px) {
+  .logoContainer,
+  .illustrationContainer {
+    display: none;
+  }
+  .mainContainer {
+    position: static;
+    top: auto;
+    left: auto;
+    transform: none;
+    width: 90%;
+    margin: 20px auto;
+    padding: 20px;
+  }
+}

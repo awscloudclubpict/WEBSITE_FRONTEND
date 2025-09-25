@@ -1,14 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from "react";
+import Image from "next/image";
+import { blogAPI, handleApiError } from "../../../utils/api";
 
 const AddBlogForm = ({ onClose, onSubmit }) => {
   const [formData, setFormData] = useState({
-    title: '',
-    author_name: '',
-    author_profile_url: '',
-    short_description: '',
-    tags: '',
-    publish_date: '',
-    share_url: ''
+    title: "",
+    author_name: "",
+    author_profile_url: "",
+    short_description: "",
+    tags: "",
+    publish_date: "",
+    share_url: "",
   });
   const [thumbnailImage, setThumbnailImage] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -16,7 +18,7 @@ const AddBlogForm = ({ onClose, onSubmit }) => {
   const handleChange = (e) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
@@ -24,43 +26,40 @@ const AddBlogForm = ({ onClose, onSubmit }) => {
     setThumbnailImage(e.target.files[0]);
   };
 
- const handleSubmit = async (e) => {
-  e.preventDefault();
-  setLoading(true);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
 
-  try {
-    const formDataToSend = new FormData();
-    formDataToSend.append("title", formData.title);
-    formDataToSend.append("author_name", formData.author_name);
-    formDataToSend.append("author_profile_url", formData.author_profile_url);
-    formDataToSend.append("short_description", formData.short_description);
-    formDataToSend.append("tags", JSON.stringify(formData.tags ? [formData.tags] : []));
-    formDataToSend.append("publish_date", formData.publish_date);
-    formDataToSend.append("share_url", formData.share_url);
+    try {
+      const formDataToSend = new FormData();
+      formDataToSend.append("title", formData.title);
+      formDataToSend.append("author_name", formData.author_name);
+      formDataToSend.append("author_profile_url", formData.author_profile_url);
+      formDataToSend.append("short_description", formData.short_description);
+      formDataToSend.append(
+        "tags",
+        JSON.stringify(formData.tags ? [formData.tags] : [])
+      );
+      formDataToSend.append("publish_date", formData.publish_date);
+      formDataToSend.append("share_url", formData.share_url);
 
-    if (thumbnailImage) {
-      formDataToSend.append("thumbnail_image", thumbnailImage);
+      if (thumbnailImage) {
+        formDataToSend.append("thumbnail_image", thumbnailImage);
+      }
+
+      const result = await blogAPI.addBlog(formDataToSend);
+
+      console.log("Blog added:", result.blog);
+      onSubmit(result.blog);
+      alert("Blog added successfully!");
+    } catch (error) {
+      const errorMessage = handleApiError(error, "Failed to add blog");
+      console.error("Error submitting blog:", errorMessage);
+      alert(errorMessage);
+    } finally {
+      setLoading(false);
     }
-
-    const response = await fetch("http://localhost:3001/addBlog", {
-      method: "POST",
-      body: formDataToSend,
-    });
-
-    const result = await response.json();
-    if (!response.ok) throw new Error(result.error || "Failed to add blog");
-
-    console.log("Blog added:", result.blog);
-    onSubmit(result.blog);
-    alert("Blog added successfully!");
-  } catch (error) {
-    console.error("Error submitting blog:", error);
-    alert(error.message);
-  } finally {
-    setLoading(false);
-  }
-};
-
+  };
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
@@ -107,7 +106,9 @@ const AddBlogForm = ({ onClose, onSubmit }) => {
           </div>
 
           <div>
-            <label className="block text-global-4 mb-2">Author Profile URL </label>
+            <label className="block text-global-4 mb-2">
+              Author Profile URL{" "}
+            </label>
             <input
               type="url"
               name="author_profile_url"
@@ -120,7 +121,9 @@ const AddBlogForm = ({ onClose, onSubmit }) => {
           </div>
 
           <div>
-            <label className="block text-global-4 mb-2">Short Description *</label>
+            <label className="block text-global-4 mb-2">
+              Short Description *
+            </label>
             <textarea
               name="short_description"
               value={formData.short_description}
@@ -135,7 +138,9 @@ const AddBlogForm = ({ onClose, onSubmit }) => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label className="block text-global-4 mb-2">Category/Tags *</label>
+              <label className="block text-global-4 mb-2">
+                Category/Tags *
+              </label>
               <select
                 name="tags"
                 value={formData.tags}
@@ -183,7 +188,9 @@ const AddBlogForm = ({ onClose, onSubmit }) => {
           </div>
 
           <div>
-            <label className="block text-global-4 mb-2">Thumbnail Image *</label>
+            <label className="block text-global-4 mb-2">
+              Thumbnail Image *
+            </label>
             <div className="bg-[#060c20] border border-gray-500 rounded-lg p-4">
               <input
                 type="file"
@@ -196,7 +203,8 @@ const AddBlogForm = ({ onClose, onSubmit }) => {
                 file:transition file:duration-200"
               />
               <p className="text-sm text-gray-400 mt-2">
-                Upload a cover image for your blog (recommended: 1200×630 pixels)
+                Upload a cover image for your blog (recommended: 1200×630
+                pixels)
               </p>
             </div>
           </div>
@@ -216,14 +224,30 @@ const AddBlogForm = ({ onClose, onSubmit }) => {
             >
               {loading ? (
                 <span className="flex items-center justify-center">
-                  <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  <svg
+                    className="animate-spin -ml-1 mr-2 h-4 w-4 text-black"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    ></path>
                   </svg>
                   Adding Blog...
                 </span>
               ) : (
-                'Add Blog'
+                "Add Blog"
               )}
             </button>
           </div>

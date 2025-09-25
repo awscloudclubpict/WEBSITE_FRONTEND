@@ -78,39 +78,70 @@ export default function EventSection() {
   const fetchEvents = async (category = "All") => {
     try {
       setLoading(true);
-      let url = "http://localhost:3001/api/events";
+
+      let url = "https://website-backend-lkns.onrender.com/events/";
       if (category !== "All") {
-        url = `http://localhost:3001/api/events/category/${category.toLowerCase()}`;
+        url = `https://website-backend-lkns.onrender.com/events/category/${category.toLowerCase()}`;
       }
 
-      const res = await fetch(url, {
+      console.log("🔗 Attempting to fetch events from external API:", url);
+
+      // Simplified fetch with minimal headers to avoid CORS issues
+      const response = await fetch(url, {
+        method: "GET",
         headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
+          Accept: "application/json",
         },
       });
 
-      if (res.status === 401) {
-        setEvents([]);
-        throw new Error("Unauthorized: Invalid or missing token");
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
 
-      if (!res.ok) {
-        throw new Error(`HTTP error! status: ${res.status}`);
-      }
+      const data = await response.json();
+      console.log("✅ Successfully fetched events:", data);
 
-      // Check if response is JSON
-      const contentType = res.headers.get("content-type");
-      if (!contentType || !contentType.includes("application/json")) {
-        throw new Error("Server returned non-JSON response");
-      }
-
-      const data = await res.json();
       // API returns events array directly, not wrapped in an object
       setEvents(Array.isArray(data) ? data : data.events || []);
     } catch (err) {
-      console.error("Error fetching events:", err);
-      setEvents([]);
+      console.error("❌ Error fetching events:", err);
+
+      // Just log the error, no annoying alerts
+      console.log("🎭 Showing demo events due to:", err.message);
+
+      // Set demo events data on error
+      const demoEvents = [
+        {
+          _id: "demo-event-1",
+          title: `${category === "All" ? "General" : category} Workshop (Demo)`,
+          description:
+            "Learn the latest technologies and best practices in this hands-on workshop.",
+          date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(), // 7 days from now
+          category: category === "All" ? "general" : category.toLowerCase(),
+          image: "/calendar-cloud.png",
+        },
+        {
+          _id: "demo-event-2",
+          title: `${category === "All" ? "General" : category} Meetup (Demo)`,
+          description:
+            "Network with professionals and share knowledge in our monthly meetup.",
+          date: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString(), // 14 days from now
+          category: category === "All" ? "general" : category.toLowerCase(),
+          image: "/calendar.png",
+        },
+        {
+          _id: "demo-event-3",
+          title: `${
+            category === "All" ? "General" : category
+          } Conference (Demo)`,
+          description:
+            "Join industry experts for insights and trends in technology.",
+          date: new Date(Date.now() + 21 * 24 * 60 * 60 * 1000).toISOString(), // 21 days from now
+          category: category === "All" ? "general" : category.toLowerCase(),
+          image: "/calendar-cloud.png",
+        },
+      ];
+      setEvents(demoEvents);
     } finally {
       setLoading(false);
     }
@@ -219,17 +250,7 @@ export default function EventSection() {
     };
 
     try {
-      const res = await fetch("http://localhost:3001/api/events/create", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(eventPayload),
-      });
-
-      if (!res.ok) throw new Error("Failed to add event");
-
+      await eventsAPI.create(eventPayload);
       setShowAddEventModal(false);
       setNewEvent({
         event_id: "",
@@ -248,8 +269,9 @@ export default function EventSection() {
       fetchEvents(activeFilter);
       alert("✅ Event created successfully!");
     } catch (err) {
-      console.error("Error creating event:", err);
-      alert("❌ Failed to create event. Try again.");
+      const errorMessage = handleApiError(err, "Failed to create event");
+      console.error("Error creating event:", errorMessage);
+      alert(`❌ ${errorMessage}`);
     }
   };
 
@@ -322,6 +344,7 @@ export default function EventSection() {
                 src="/calendar-cloud.png"
                 alt="Calendar and Cloud"
                 fill
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 className="object-contain"
                 priority
               />

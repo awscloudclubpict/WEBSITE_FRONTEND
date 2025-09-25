@@ -1,13 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
+import { blogAPI, handleApiError } from "../../../utils/api";
 
 const WriteBlogForm = ({ onClose }) => {
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    title: '',
-    category: '',
-    abstract: '',
-    additionalInfo: ''
+    name: "",
+    email: "",
+    title: "",
+    category: "",
+    abstract: "",
+    additionalInfo: "",
   });
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -15,34 +16,25 @@ const WriteBlogForm = ({ onClose }) => {
   const handleChange = (e) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
-  setLoading(true);
+    e.preventDefault();
+    setLoading(true);
 
-  try {
-    const response = await fetch("http://localhost:3001/sendEmail", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(formData),
-    });
-
-    const result = await response.json();
-
-    if (!response.ok) throw new Error(result.error || "Failed to send email");
-
-    setSubmitted(true);
-  } catch (error) {
-    console.error("Error submitting form:", error);
-    alert(error.message);
-  } finally {
-    setLoading(false);
-  }
-};
-
+    try {
+      await blogAPI.sendEmail(formData);
+      setSubmitted(true);
+    } catch (error) {
+      const errorMessage = handleApiError(error, "Failed to send email");
+      console.error("Error submitting form:", errorMessage);
+      alert(errorMessage);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   if (submitted) {
     return (
@@ -50,13 +42,26 @@ const WriteBlogForm = ({ onClose }) => {
         <div className="bg-[#071128] rounded-2xl shadow-xl border border-gray-600 p-8 max-w-md w-full">
           <div className="text-center">
             <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
-              <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              <svg
+                className="w-8 h-8 text-white"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M5 13l4 4L19 7"
+                />
               </svg>
             </div>
-            <h3 className="text-2xl font-bold text-global-4 mb-2">Thank You!</h3>
+            <h3 className="text-2xl font-bold text-global-4 mb-2">
+              Thank You!
+            </h3>
             <p className="text-global-4 mb-6">
-              Your blog abstract has been submitted successfully. We'll review it and get back to you soon!
+              Your blog abstract has been submitted successfully. We'll review
+              it and get back to you soon!
             </p>
             <button
               onClick={onClose}
@@ -163,7 +168,9 @@ const WriteBlogForm = ({ onClose }) => {
           </div>
 
           <div>
-            <label className="block text-global-4 mb-2">Additional Information</label>
+            <label className="block text-global-4 mb-2">
+              Additional Information
+            </label>
             <textarea
               name="additionalInfo"
               value={formData.additionalInfo}
@@ -188,7 +195,7 @@ const WriteBlogForm = ({ onClose }) => {
               disabled={loading}
               className="flex-1 bg-[#f4b631] text-global-1 px-6 py-3 rounded-lg hover:bg-yellow-500 disabled:opacity-50 transition-colors font-bold"
             >
-              {loading ? 'Submitting...' : 'Submit Abstract'}
+              {loading ? "Submitting..." : "Submit Abstract"}
             </button>
           </div>
         </form>

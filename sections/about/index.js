@@ -169,6 +169,7 @@ export default function About() {
                   width={400}
                   height={200}
                   className="about-image"
+                  style={{ width: "auto", height: "auto" }}
                 />
               </motion.div>
               <motion.div
