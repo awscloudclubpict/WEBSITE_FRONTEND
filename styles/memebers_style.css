@@ -279,10 +279,85 @@
   border: 1px solid #327ED7;
 }
 
-/* Responsive */
+/* Dropdown for categories on mobile */
+.members-category-dropdown {
+  width: 100%;
+  max-width: 350px;
+  margin: 0 auto 2rem auto;
+  padding: 0.8rem 1rem;
+  border-radius: 14px;
+  font-size: 1.1rem;
+  background: #091734;
+  color: #fff;
+  border: 1px solid #327ED7;
+  font-weight: 600;
+  display: block;
+}
+
+/* Mobile carousel styles */
+.members-list-mobile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.mobile-slide-wrapper {
+  width: 100%;
+  max-width: 350px;
+  margin: 0 auto;
+  touch-action: pan-x;
+  transition: transform 0.3s;
+}
+.carousel-arrow {
+  background: #091734;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 2rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.carousel-arrow:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.mobile-card {
+  min-width: 260px;
+  max-width: 90vw;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+}
+
+/* Mobile add member form */
+.mobile-add-member-box {
+  background: #091734;
+  border-radius: 18px;
+  padding: 1.5rem 1rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+}
+.mobile-add-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #9E53D1;
+  margin-bottom: 1rem;
+}
+.mobile-add-form .form-row {
+  flex-direction: column;
+  gap: 0.8rem;
+}
+.mobile-add-form .form-group {
+  margin-bottom: 0.5rem;
+}
 @media (max-width: 900px) {
   .members-list { gap: 1.5rem; }
   .member-card { width: 90vw; max-width: 350px; }
+}
+
+@media (max-width: 700px) {
+  .members-categories { display: none; }
+  .members-modal { max-width: 98vw; }
 }
 
 @media (max-width: 600px) {
@@ -305,4 +380,139 @@
   flex: 1;
   display: flex;
   flex-direction: column;
+}
+
+/* File input styles */
+.file-input {
+  padding: 0.9rem;
+  border-radius: 10px;
+  border: 1px solid #327ED7;
+  background: rgba(6,7,23,0.6);
+  color: #fff;
+  font-size: 1.1rem;
+  width: 100%;
+}
+
+.file-input::file-selector-button {
+  background: linear-gradient(135deg, #0F2655 0%, #9E53D1 100%);
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-right: 1rem;
+}
+
+.file-preview {
+  margin-top: 0.5rem;
+  width: 80px;
+  height: 80px;/* File input styles */
+.file-input {
+  padding: 0.9rem;
+  border-radius: 10px;
+  border: 1px solid #327ED7;
+  background: rgba(6,7,23,0.6);
+  color: #fff;
+  font-size: 1.1rem;
+  width: 100%;
+}
+
+.file-input::file-selector-button {
+  background: linear-gradient(135deg, #0F2655 0%, #9E53D1 100%);
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-right: 1rem;
+}
+
+.file-preview {
+  margin-top: 0.5rem;
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 1px solid #327ED7;
+}
+
+/* Mobile form adjustments */
+.mobile-add-form .file-input {
+  font-size: 1rem;
+  padding: 0.7rem;
+}
+
+.mobile-add-form .file-preview {
+  width: 60px;
+  height: 60px;
+}
+  object-fit: cover;
+  border-radius: 10px;
+  border: 1px solid #327ED7;
+}
+
+/* Mobile form adjustments */
+.mobile-add-form .file-input {
+  font-size: 1rem;
+  padding: 0.7rem;
+}
+
+.mobile-add-form .file-preview {
+  width: 60px;
+  height: 60px;
+}
+
+/* Error message styles */
+.error-message {
+  background: #ff4757;
+  color: white;
+  padding: 0.8rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+}
+
+.error-banner {
+  background: #ff4757;
+  color: white;
+  padding: 1rem;
+  border-radius: 10px;
+  margin-bottom: 2rem;
+  text-align: center;
+  font-size: 1rem;
+}
+
+/* File input styles */
+.file-input {
+  padding: 0.9rem;
+  border-radius: 10px;
+  border: 1px solid #327ED7;
+  background: rgba(6,7,23,0.6);
+  color: #fff;
+  font-size: 1.1rem;
+  width: 100%;
+}
+
+.file-input::file-selector-button {
+  background: linear-gradient(135deg, #0F2655 0%, #9E53D1 100%);
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-right: 1rem;
+  transition: all 0.3s;
+}
+
+.file-input::file-selector-button:hover {
+  opacity: 0.9;
+}
+
+.file-preview {
+  margin-top: 0.5rem;
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 1px solid #327ED7;
 }

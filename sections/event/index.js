@@ -52,7 +52,7 @@ export default function EventSection() {
 
   // Use hardcoded token for all requests
   const token =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGV4YW1wbGUuY29tIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzU4NTQ0ODI2LCJleHAiOjE3NTg1NDg0MjZ9.c96CXnIYibN3pq7hAU1uF-25nK_aXA5mQWezs_I4alU";
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGV4YW1wbGUuY29tIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzYxNDA3NTM1LCJleHAiOjE3NjE0MTExMzV9.q881jh6XpYQESjyS-j7bhOSAHhTL9NVOs4gVP-v7_FY";
 
   useEffect(() => {
     setIsAdmin(true); // demo admin
