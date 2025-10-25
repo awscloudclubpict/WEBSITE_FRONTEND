@@ -1,14 +1,13 @@
+"use client";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const router = useRouter();
 
-  const scrollToSection = (sectionId) => {
-    const element = document.getElementById(sectionId);
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
-    }
-    setMenuOpen(false);
+  const handleGetStarted = () => {
+    router.push("/login");
   };
 
   const handleJoinUs = () => {
@@ -34,37 +33,37 @@ export default function Home() {
 
         {/* Desktop Navigation */}
         <ul className="hidden md:flex gap-5 lg:gap-7 text-base md:text-lg font-medium">
-          <li 
+          <li
             className="hover:text-[#327dd6] transition-colors cursor-pointer"
             onClick={() => scrollToSection("home")}
           >
             Home
           </li>
-          <li 
+          <li
             className="hover:text-[#327dd6] transition-colors cursor-pointer"
             onClick={() => scrollToSection("about")}
           >
             About
           </li>
-          <li 
+          <li
             className="hover:text-[#327dd6] transition-colors cursor-pointer"
             onClick={() => scrollToSection("events")}
           >
             Events
           </li>
-          <li 
+          <li
             className="hover:text-[#327dd6] transition-colors cursor-pointer"
             onClick={() => scrollToSection("blogs")}
           >
             Blogs
           </li>
-          <li 
+          <li
             className="hover:text-[#327dd6] transition-colors cursor-pointer"
             onClick={() => scrollToSection("members")}
           >
             Members
           </li>
-          <li 
+          <li
             className="hover:text-[#327dd6] transition-colors cursor-pointer"
             onClick={() => scrollToSection("contact")}
           >
@@ -74,7 +73,7 @@ export default function Home() {
 
         <div className="flex items-center gap-4 sm:gap-5">
           {/* Join Us Button (Desktop) */}
-          <button 
+          <button
             className="hidden md:block bg-[#327dd6] text-white px-5 py-2.5 rounded-lg font-semibold hover:bg-blue-600 transition-colors text-base md:text-lg whitespace-nowrap"
             onClick={handleJoinUs}
           >
@@ -143,7 +142,7 @@ export default function Home() {
             >
               Contact Us
             </button>
-            <button 
+            <button
               className="bg-[#327dd6] text-white py-2.5 px-5 rounded font-semibold hover:bg-blue-600 transition-colors mt-2 text-base whitespace-nowrap"
               onClick={handleJoinUs}
             >
@@ -152,9 +151,12 @@ export default function Home() {
           </div>
         </div>
       )}
-  <div className="h-6 sm:h-7"></div>
+      <div className="h-6 sm:h-7"></div>
       {/* Main Content - Home Section */}
-      <main id="home" className="flex flex-col md:flex-row items-center justify-between px-5 sm:px-7 md:px-9 lg:px-13 py-9 sm:py-13 md:py-17">
+      <main
+        id="home"
+        className="flex flex-col md:flex-row items-center justify-between px-5 sm:px-7 md:px-9 lg:px-13 py-9 sm:py-13 md:py-17"
+      >
         {/* Left Section */}
         <section className="max-w-lg lg:max-w-xl text-center md:text-left">
           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[#327dd6] mb-4 sm:mb-5 leading-tight">
@@ -171,10 +173,14 @@ export default function Home() {
             Join a community of cloud enthusiasts, builders, and learners.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 sm:gap-5 mb-7 sm:mb-9 justify-center md:justify-start">
-            <button className="bg-[#327dd6] text-white px-6 py-3 sm:px-7 sm:py-3.5 rounded-lg font-semibold hover:bg-blue-600 transition-colors text-base sm:text-lg whitespace-nowrap">
+            <button
+              className="bg-[#327dd6] text-white px-6 py-3 sm:px-7 sm:py-3.5 rounded-lg font-semibold hover:bg-blue-600 transition-colors text-base sm:text-lg whitespace-nowrap"
+              onClick={handleGetStarted}
+            >
               Get Started
             </button>
-            <button 
+
+            <button
               className="bg-white text-[#060717] px-6 py-3 sm:px-7 sm:py-3.5 rounded-lg font-semibold hover:bg-gray-100 transition-colors text-base sm:text-lg whitespace-nowrap"
               onClick={handleJoinUs}
             >
@@ -182,23 +188,23 @@ export default function Home() {
             </button>
           </div>
           <ul className="space-y-3 sm:space-y-4 mt-5 text-base sm:text-lg md:text-xl text-left">
-  <li className="flex items-center text-gray-300">
-    <span className="text-[#327dd6] mr-2">✔</span>
-    10+ Workshop Hosted
-  </li>
-  <li className="flex items-center text-gray-300">
-    <span className="text-[#327dd6] mr-2">✔</span>
-    2000+ Active Members
-  </li>
-  <li className="flex items-center text-gray-300">
-    <span className="text-[#327dd6] mr-2">✔</span>
-    Certified AWS Student Ambassadors
-  </li>
-</ul>
+            <li className="flex items-center text-gray-300">
+              <span className="text-[#327dd6] mr-2">✔</span>
+              10+ Workshop Hosted
+            </li>
+            <li className="flex items-center text-gray-300">
+              <span className="text-[#327dd6] mr-2">✔</span>
+              2000+ Active Members
+            </li>
+            <li className="flex items-center text-gray-300">
+              <span className="text-[#327dd6] mr-2">✔</span>
+              Certified AWS Student Ambassadors
+            </li>
+          </ul>
         </section>
 
         {/* Right Section */}
-         <section className="mt-9 md:mt-0 flex justify-center md:justify-end w-full md:w-auto">
+        <section className="mt-9 md:mt-0 flex justify-center md:justify-end w-full md:w-auto">
           <img
             src="/images/img_uploading_pana_1.png"
             alt="Cloud Club Illustration"
