@@ -75,7 +75,7 @@ const Blogs = () => {
 
   // Skeleton Loading Components
   const SkeletonCard = () => (
-    <div className="bg-[#060c20] rounded-2xl sm:rounded-3xl overflow-hidden flex flex-col h-full animate-pulse">
+    <div className="bg-[#060c20] rounded-2xl sm:rounded-3xl overflow-hidden flex flex-col h-full animate-pulse min-w-[280px] sm:min-w-0">
       <div className="w-full h-48 sm:h-56 md:h-64 lg:h-72 bg-[#0a0f1f] flex items-center justify-center p-4">
         <div className="w-full h-full bg-[#071128] rounded-lg"></div>
       </div>
@@ -106,6 +106,24 @@ const Blogs = () => {
           <div className="h-5 bg-[#071128] rounded w-1/4"></div>
         </div>
       </div>
+    </div>
+  );
+
+  // Horizontal scroll container for mobile
+  const HorizontalScrollContainer = ({ children, className = "" }) => (
+    <div className={`relative ${className}`}>
+      <div className="flex overflow-x-auto pb-4 -mx-4 px-4 scrollbar-hide horizontal-scroll-container">
+        <div className="flex gap-4 sm:gap-6 md:gap-8 min-w-max">
+          {children}
+        </div>
+      </div>
+    </div>
+  );
+
+  // Mobile card component for horizontal scrolling
+  const MobileBlogCard = ({ blog }) => (
+    <div className="w-[280px] flex-shrink-0">
+      <BlogCard blog={blog} onReadBlog={handleReadBlog} />
     </div>
   );
 
@@ -176,7 +194,17 @@ const Blogs = () => {
             <>
               <SkeletonSingleBlog />
               <div className="bg-[#0711287c] rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
+                {/* Mobile horizontal scroll for skeleton */}
+                <div className="block sm:hidden">
+                  <HorizontalScrollContainer>
+                    <SkeletonCard />
+                    <SkeletonCard />
+                    <SkeletonCard />
+                    <SkeletonCard />
+                  </HorizontalScrollContainer>
+                </div>
+                {/* Desktop grid for skeleton */}
+                <div className="hidden sm:grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
                   <SkeletonCard />
                   <SkeletonCard />
                   <SkeletonCard />
@@ -185,100 +213,150 @@ const Blogs = () => {
             </>
           ) : filteredBlogs.length > 0 ? (
             <>
-              {filteredBlogs.length === 1 && (
-                <div className="bg-[#060c20] rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8">
-                  <div className="flex flex-col lg:flex-row gap-4 sm:gap-6 md:gap-8 items-stretch">
-                    <div className="w-full lg:w-2/5">
-                      <div className="blog-card-image-container">
-                        <img
-                          src={filteredBlogs[0].thumbnail_image_url}
-                          alt={filteredBlogs[0].title}
-                          className="single-blog-image w-full h-48 sm:h-56 md:h-64 lg:h-72 object-cover rounded-xl sm:rounded-2xl"
-                        />
-                      </div>
-                    </div>
-                    <div className="flex-1 text-left flex flex-col justify-center">
-                      <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-global-4 mb-2 sm:mb-4">
-                        {filteredBlogs[0].title}
-                      </h3>
-                      <p className="text-global-4 text-base sm:text-lg mb-2 sm:mb-4">
-                        by <span className="text-[#327dd6] font-bold">{filteredBlogs[0].author_name}</span>
-                      </p>
-                      <p className="text-global-4 text-sm sm:text-base md:text-lg mb-4 sm:mb-6 leading-relaxed">
-                        {filteredBlogs[0].short_description}
-                      </p>
-                      <button
-                        onClick={() => handleReadBlog(filteredBlogs[0])}
-                        className="text-[#f4b631] text-base sm:text-lg font-bold hover:underline inline-block text-left"
-                      >
-                        Read Blog →
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {filteredBlogs.length === 2 && (
-                <div className="bg-[#0711287c] rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 md:gap-8">
-                    {filteredBlogs.map((blog) => (
-                      <BlogCard key={blog.blog_id} blog={blog} onReadBlog={handleReadBlog} />
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {filteredBlogs.length === 3 && (
-                <div className="bg-[#0711287c] rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8">
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
-                    {filteredBlogs.map((blog) => (
-                      <BlogCard key={blog.blog_id} blog={blog} onReadBlog={handleReadBlog} />
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {filteredBlogs.length === 4 && (
-                <>
-                  <div className="bg-[#0711287c] rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8">
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
-                      {filteredBlogs.slice(0, 3).map((blog) => (
-                        <BlogCard key={blog.blog_id} blog={blog} onReadBlog={handleReadBlog} />
-                      ))}
-                    </div>
-                  </div>
+              {/* Mobile view - All blogs in horizontal scroll */}
+              <div className="block sm:hidden">
+                {filteredBlogs.length === 1 ? (
                   <div className="bg-[#060c20] rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8">
-                    <div className="flex flex-col lg:flex-row gap-4 sm:gap-6 items-center">
-                      <div className="w-full lg:w-2/5">
-                        <div className="fourth-blog-image-container">
+                    <div className="flex flex-col gap-4 items-stretch">
+                      <div className="w-full">
+                        <div className="blog-card-image-container">
                           <img
-                            src={filteredBlogs[3].thumbnail_image_url}
-                            alt={filteredBlogs[3].title}
-                            className="fourth-blog-image w-full h-48 sm:h-56 md:h-64 object-cover rounded-xl sm:rounded-2xl"
+                            src={filteredBlogs[0].thumbnail_image_url}
+                            alt={filteredBlogs[0].title}
+                            className="single-blog-image w-full h-48 sm:h-56 object-cover rounded-xl"
                           />
                         </div>
                       </div>
-                      <div className="flex-1 text-left">
-                        <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-global-4 mb-2 sm:mb-3 line-clamp-2">
-                          {filteredBlogs[3].title}
+                      <div className="text-left">
+                        <h3 className="text-lg font-bold text-global-4 mb-2">
+                          {filteredBlogs[0].title}
                         </h3>
-                        <p className="text-global-4 text-base sm:text-lg mb-2 sm:mb-3">
-                          by <span className="text-[#327dd6] font-bold">{filteredBlogs[3].author_name}</span>
+                        <p className="text-global-4 text-base mb-2">
+                          by <span className="text-[#327dd6] font-bold">{filteredBlogs[0].author_name}</span>
                         </p>
-                        <p className="text-global-4 text-sm sm:text-base md:text-lg mb-3 sm:mb-4 line-clamp-2">
-                          {filteredBlogs[3].short_description}
+                        <p className="text-global-4 text-sm mb-4 leading-relaxed">
+                          {filteredBlogs[0].short_description}
                         </p>
                         <button
-                          onClick={() => handleReadBlog(filteredBlogs[3])}
-                          className="text-[#f4b631] text-base sm:text-lg font-bold hover:underline inline-block"
+                          onClick={() => handleReadBlog(filteredBlogs[0])}
+                          className="text-[#f4b631] text-base font-bold hover:underline"
                         >
                           Read Blog →
                         </button>
                       </div>
                     </div>
                   </div>
-                </>
-              )}
+                ) : (
+                  <div className="bg-[#0711287c] rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8">
+                    <HorizontalScrollContainer>
+                      {filteredBlogs.map((blog) => (
+                        <MobileBlogCard key={blog.blog_id} blog={blog} />
+                      ))}
+                    </HorizontalScrollContainer>
+                  </div>
+                )}
+              </div>
+
+              {/* Desktop view - Original layout */}
+              <div className="hidden sm:block">
+                {filteredBlogs.length === 1 && (
+                  <div className="bg-[#060c20] rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8">
+                    <div className="flex flex-col lg:flex-row gap-4 sm:gap-6 md:gap-8 items-stretch">
+                      <div className="w-full lg:w-2/5">
+                        <div className="blog-card-image-container">
+                          <img
+                            src={filteredBlogs[0].thumbnail_image_url}
+                            alt={filteredBlogs[0].title}
+                            className="single-blog-image w-full h-48 sm:h-56 md:h-64 lg:h-72 object-cover rounded-xl sm:rounded-2xl"
+                          />
+                        </div>
+                      </div>
+                      <div className="flex-1 text-left flex flex-col justify-center">
+                        <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-global-4 mb-2 sm:mb-4">
+                          {filteredBlogs[0].title}
+                        </h3>
+                        <p className="text-global-4 text-base sm:text-lg mb-2 sm:mb-4">
+                          by <span className="text-[#327dd6] font-bold">{filteredBlogs[0].author_name}</span>
+                        </p>
+                        <p className="text-global-4 text-sm sm:text-base md:text-lg mb-4 sm:mb-6 leading-relaxed">
+                          {filteredBlogs[0].short_description}
+                        </p>
+                        <button
+                          onClick={() => handleReadBlog(filteredBlogs[0])}
+                          className="text-[#f4b631] text-base sm:text-lg font-bold hover:underline inline-block text-left"
+                        >
+                          Read Blog →
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {filteredBlogs.length === 2 && (
+                  <div className="bg-[#0711287c] rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 md:gap-8">
+                      {filteredBlogs.map((blog) => (
+                        <BlogCard key={blog.blog_id} blog={blog} onReadBlog={handleReadBlog} />
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {filteredBlogs.length === 3 && (
+                  <div className="bg-[#0711287c] rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
+                      {filteredBlogs.map((blog) => (
+                        <BlogCard key={blog.blog_id} blog={blog} onReadBlog={handleReadBlog} />
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {filteredBlogs.length === 4 && (
+                  <>
+                    {/* First three blogs in grid */}
+                    <div className="bg-[#0711287c] rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 mb-6 sm:mb-8">
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
+                        {filteredBlogs.slice(0, 3).map((blog) => (
+                          <BlogCard key={blog.blog_id} blog={blog} onReadBlog={handleReadBlog} />
+                        ))}
+                      </div>
+                    </div>
+                    
+                    {/* Fourth blog as featured with proper spacing */}
+                    <div className="bg-[#060c20] rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 mt-6 sm:mt-8">
+                      <div className="flex flex-col lg:flex-row gap-6 sm:gap-8 md:gap-10 items-center">
+                        <div className="w-full lg:w-2/5">
+                          <div className="fourth-blog-image-container">
+                            <img
+                              src={filteredBlogs[3].thumbnail_image_url}
+                              alt={filteredBlogs[3].title}
+                              className="fourth-blog-image w-full h-48 sm:h-56 md:h-64 lg:h-72 object-cover rounded-xl sm:rounded-2xl"
+                            />
+                          </div>
+                        </div>
+                        <div className="flex-1 text-left lg:pl-4">
+                          <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-global-4 mb-3 sm:mb-4">
+                            {filteredBlogs[3].title}
+                          </h3>
+                          <p className="text-global-4 text-lg sm:text-xl mb-3 sm:mb-4">
+                            by <span className="text-[#327dd6] font-bold">{filteredBlogs[3].author_name}</span>
+                          </p>
+                          <p className="text-global-4 text-base sm:text-lg md:text-xl mb-4 sm:mb-6 leading-relaxed">
+                            {filteredBlogs[3].short_description}
+                          </p>
+                          <button
+                            onClick={() => handleReadBlog(filteredBlogs[3])}
+                            className="text-[#f4b631] text-lg sm:text-xl font-bold hover:underline inline-block"
+                          >
+                            Read Blog →
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </>
+                )}
+              </div>
             </>
           ) : (
             <div className="text-center py-8 sm:py-12">
