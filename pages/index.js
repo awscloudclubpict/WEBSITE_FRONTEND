@@ -5,6 +5,7 @@ import AboutSection from "../sections/about"; // Import the AboutSection
 import HomeSection from "../sections/home"; // Import the HomeSection
 import MemberSection from "../sections/members"; // Import the MemberSection
 import BlogSection from "../sections/blog"; // Import the BlogSection
+import ContactSection from "../sections/contact-us"; // Import the ContactSection
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -30,7 +31,7 @@ export default function Home() {
       
       <div id="events">
          <EventSection /> 
-      </div>
+      </div> 
       
       <div id="blogs">
         <BlogSection />
@@ -38,10 +39,10 @@ export default function Home() {
       
       <div id="members">
         <MemberSection />
-      </div>
+      </div> 
       
       <div id="contact">
-        {/* <ContactSection /> */}
+        <ContactSection /> 
       </div>
     </div>
   );

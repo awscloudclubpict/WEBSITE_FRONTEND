@@ -181,20 +181,20 @@ export default function Home() {
               Join Us
             </button>
           </div>
-          <ul className="space-y-3 sm:space-y-4 mt-5 text-base sm:text-lg md:text-xl">
-            <li className="flex items-center justify-center md:justify-start text-gray-300">
-              <span className="text-[#327dd6] mr-2">✔</span>
-              10+ Workshop Hosted
-            </li>
-            <li className="flex items-center justify-center md:justify-start text-gray-300">
-              <span className="text-[#327dd6] mr-2">✔</span>
-              2000+ Active Members
-            </li>
-            <li className="flex items-center justify-center md:justify-start text-gray-300">
-              <span className="text-[#327dd6] mr-2">✔</span>
-              Certified AWS Student Ambassadors
-            </li>
-          </ul>
+          <ul className="space-y-3 sm:space-y-4 mt-5 text-base sm:text-lg md:text-xl text-left">
+  <li className="flex items-center text-gray-300">
+    <span className="text-[#327dd6] mr-2">✔</span>
+    10+ Workshop Hosted
+  </li>
+  <li className="flex items-center text-gray-300">
+    <span className="text-[#327dd6] mr-2">✔</span>
+    2000+ Active Members
+  </li>
+  <li className="flex items-center text-gray-300">
+    <span className="text-[#327dd6] mr-2">✔</span>
+    Certified AWS Student Ambassadors
+  </li>
+</ul>
         </section>
 
         {/* Right Section */}
