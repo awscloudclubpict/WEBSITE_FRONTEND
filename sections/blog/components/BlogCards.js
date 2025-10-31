@@ -2,6 +2,13 @@
 import React from 'react';
 
 const BlogCard = ({ blog, onReadBlog }) => {
+  const handleAuthorClick = (e) => {
+    e.stopPropagation(); // Prevent triggering the read blog action
+    if (blog.author_profile_url) {
+      window.open(blog.author_profile_url, '_blank', 'noopener,noreferrer');
+    }
+  };
+
   return (
     <div className="bg-[#060c20] rounded-2xl sm:rounded-3xl overflow-hidden flex flex-col h-full transition-transform duration-300 hover:scale-105">
       <div className="w-full h-48 sm:h-56 md:h-64 lg:h-72 bg-[#0a0f1f] flex items-center justify-center p-4">
@@ -14,7 +21,17 @@ const BlogCard = ({ blog, onReadBlog }) => {
       <div className="p-4 sm:p-6 flex flex-col flex-1">
         <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-white mb-3">{blog.title}</h3>
         <p className="text-white text-base sm:text-lg mb-2">
-          by <span className="text-[#327dd6] font-bold">{blog.author_name}</span>
+          by{' '}
+          <span 
+            onClick={handleAuthorClick}
+            className={`text-[#327dd6] font-bold ${
+              blog.author_profile_url 
+                ? 'cursor-pointer hover:underline hover:text-[#4a90e2] transition-colors duration-200' 
+                : ''
+            }`}
+          >
+            {blog.author_name}
+          </span>
         </p>
         <p className="text-white text-sm sm:text-base md:text-lg flex-1 mb-3 sm:mb-4 leading-relaxed">
           {blog.short_description}

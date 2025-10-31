@@ -2,41 +2,70 @@
 import React, { useState } from "react";
 import { Phone, Mail, MapPin } from "lucide-react";
 import { FaLinkedin, FaInstagram, FaMeetup } from "react-icons/fa";
-import emailjs from "@emailjs/browser";
 
 export default function ContactUs() {
   const [formData, setFormData] = useState({ name: "", email: "", message: "" });
   const [loading, setLoading] = useState(false);
+  const [submitted, setSubmitted] = useState(false); // Add submitted state
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
-    emailjs
-      .send(
-        process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID,
-        process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID,
-        formData,
-        process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY
-      )
-      .then((result) => {
-        alert("Message sent successfully!");
-        console.log("EmailJS Result:", result.text);
-      })
-      .catch((error) => {
-        alert("Failed to send message. Please try again later.");
-        console.error("EmailJS Error:", error.text || error);
-      })
-      .finally(() => {
-        setLoading(false);
-        setFormData({ name: "", email: "", message: "" });
+    try {
+      const res = await fetch("http://localhost:3001/api/contact/send", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
       });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        setSubmitted(true); // Show success modal instead of alert
+        setFormData({ name: "", email: "", message: "" });
+      } else {
+        alert(data.error || "Something went wrong!");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Failed to send message. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
+
+  // Success Modal (same as WriteBlogForm)
+  if (submitted) {
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div className="bg-[#071128] rounded-2xl shadow-xl border border-gray-600 p-8 max-w-md w-full">
+          <div className="text-center">
+            <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+            <h3 className="text-2xl font-bold text-global-4 mb-2">Thank You!</h3>
+            <p className="text-global-4 mb-6">
+              Your message has been sent successfully. We'll get back to you soon!
+            </p>
+            <button
+              onClick={() => setSubmitted(false)}
+              className="bg-[#327dd6] text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition-colors"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <section
@@ -62,7 +91,7 @@ export default function ContactUs() {
               </span>
             </h1>
             <p className="text-2xl sm:text-3xl font-semibold text-gray-300">
-              We’re here to answer your questions or help you connect
+              We're here to answer your questions or help you connect
             </p>
           </div>
 
