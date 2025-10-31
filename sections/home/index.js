@@ -14,6 +14,13 @@ export default function Home() {
     window.open("https://www.meetup.com/aws-cloud-club-at-pict/", "_blank");
   };
 
+   const scrollToSection = (sectionId) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[#060717] text-white font-inter">
       {/* Navbar */}

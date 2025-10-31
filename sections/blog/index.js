@@ -7,7 +7,7 @@ import WriteBlogForm from './components/WriteBlogForm';
 import AddBlogForm from './components/AddBlogForm';
 
 const Blogs = () => {
-  const [selectedBlogFilter, setSelectedBlogFilter] = useState('WEB');
+  const [selectedBlogFilter, setSelectedBlogFilter] = useState('WEB'); // Changed default to 'WEB'
   const [blogs, setBlogs] = useState([]);
   const [filteredBlogs, setFilteredBlogs] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -17,6 +17,7 @@ const Blogs = () => {
   const [showSkeleton, setShowSkeleton] = useState(true);
 
   const blogFilters = ['WEB', 'AI/ML', 'AWS', 'AI'];
+  const user = JSON.parse(localStorage.getItem('user'));
 
   useEffect(() => {
     loadInitialData();
@@ -25,9 +26,12 @@ const Blogs = () => {
   useEffect(() => {
     if (blogs && blogs.length > 0) {
       const filtered = blogs
-        .filter(blog =>
-          blog.tags?.map(tag => tag.toUpperCase()).includes(selectedBlogFilter.toUpperCase())
-        )
+        .filter(blog => {
+          const blogTags = typeof blog.tags === 'string' 
+            ? blog.tags.toUpperCase()
+            : (blog.tags || '').toUpperCase();
+          return blogTags.includes(selectedBlogFilter.toUpperCase());
+        })
         .slice(0, 4);
 
       setFilteredBlogs(filtered);
@@ -41,20 +45,21 @@ const Blogs = () => {
       setLoading(true);
       setShowSkeleton(true);
       setError(null);
-
-      const [blogsResult] = await Promise.all([
-        BlogLoader.loadAllBlogs(),
-        new Promise(resolve => setTimeout(resolve, 800))
-      ]);
-
-      if (blogsResult.error) {setBlogs([]);}
-      setBlogs(blogsResult.data);
+        await new Promise(resolve => setTimeout(resolve, 3000)); // 1 second delay
+      const blogsResult = await BlogLoader.loadAllBlogs();
+      
+      if (blogsResult.error) {
+        setBlogs([]);
+        setError(blogsResult.error);
+      } else {
+        setBlogs(blogsResult.data || []);
+      }
     } catch (err) {
       setError(err.message);
-      console.error('Error loading data:', err);
+      setBlogs([]);
     } finally {
       setLoading(false);
-      setTimeout(() => setShowSkeleton(false), 200);
+      setShowSkeleton(false);
     }
   };
 
@@ -64,13 +69,28 @@ const Blogs = () => {
     }
   };
 
+  const handleAuthorClick = (e, authorUrl) => {
+    e.stopPropagation();
+    if (authorUrl) {
+      window.open(authorUrl, '_blank', 'noopener,noreferrer');
+    }
+  };
+
   const handleSeeAllBlogs = () => {
     window.open('https://www.linkedin.com/newsletters/aws-cloud-club-pict-7218283276505870336', '_blank', 'noopener,noreferrer');
   };
 
-  const handleAddBlogSubmit = (blogData) => {
-    console.log('New blog data:', blogData);
-    setShowAddBlogForm(false);
+  const handleAddBlogSubmit = async (blogData) => {
+    try {
+      // Refresh the blogs data to get the latest from server
+      await loadInitialData();
+      setShowAddBlogForm(false);
+      
+      // Optional: Show success message
+      console.log('Blog added successfully and data refreshed');
+    } catch (error) {
+      console.error('Error refreshing blogs after adding new one:', error);
+    }
   };
 
   // Skeleton Loading Components
@@ -127,6 +147,25 @@ const Blogs = () => {
     </div>
   );
 
+  // Author name component with click functionality
+  const AuthorName = ({ authorName, authorUrl }) => {
+    if (authorUrl) {
+      return (
+        <span 
+          onClick={(e) => handleAuthorClick(e, authorUrl)}
+          className="text-[#327dd6] font-bold cursor-pointer hover:underline hover:text-[#4a90e2] transition-colors duration-200"
+        >
+          {authorName}
+        </span>
+      );
+    }
+    return (
+      <span className="text-[#327dd6] font-bold">
+        {authorName}
+      </span>
+    );
+  };
+
   if (error) {
     return (
       <section id="blogs" className="py-8 md:py-12 lg:py-16 px-4 sm:px-6 lg:px-8">
@@ -152,14 +191,16 @@ const Blogs = () => {
             <p className="text-global-4 text-lg sm:text-xl md:text-2xl lg:text-3xl mb-4 lg:mb-6">
               Real Voices. Real Stories.<br />By our community.
             </p>
-            <Button 
-              variant="accent" 
-              size="md" 
-              onClick={() => setShowAddBlogForm(true)}
-              className="text-sm sm:text-base"
-            >
-              + Add Blog
-            </Button>
+            {user?.role === 'admin' && (
+              <Button 
+                variant="accent" 
+                size="md" 
+                onClick={() => setShowAddBlogForm(true)}
+                className="text-sm sm:text-base"
+              >
+                + Add Blog
+              </Button>
+            )}
           </div>
           <div className="w-full lg:w-1/2 flex justify-center lg:justify-end">
             <img
@@ -232,7 +273,7 @@ const Blogs = () => {
                           {filteredBlogs[0].title}
                         </h3>
                         <p className="text-global-4 text-base mb-2">
-                          by <span className="text-[#327dd6] font-bold">{filteredBlogs[0].author_name}</span>
+                          by <AuthorName authorName={filteredBlogs[0].author_name} authorUrl={filteredBlogs[0].author_profile_url} />
                         </p>
                         <p className="text-global-4 text-sm mb-4 leading-relaxed">
                           {filteredBlogs[0].short_description}
@@ -276,7 +317,7 @@ const Blogs = () => {
                           {filteredBlogs[0].title}
                         </h3>
                         <p className="text-global-4 text-base sm:text-lg mb-2 sm:mb-4">
-                          by <span className="text-[#327dd6] font-bold">{filteredBlogs[0].author_name}</span>
+                          by <AuthorName authorName={filteredBlogs[0].author_name} authorUrl={filteredBlogs[0].author_profile_url} />
                         </p>
                         <p className="text-global-4 text-sm sm:text-base md:text-lg mb-4 sm:mb-6 leading-relaxed">
                           {filteredBlogs[0].short_description}
@@ -340,7 +381,7 @@ const Blogs = () => {
                             {filteredBlogs[3].title}
                           </h3>
                           <p className="text-global-4 text-lg sm:text-xl mb-3 sm:mb-4">
-                            by <span className="text-[#327dd6] font-bold">{filteredBlogs[3].author_name}</span>
+                            by <AuthorName authorName={filteredBlogs[3].author_name} authorUrl={filteredBlogs[3].author_profile_url} />
                           </p>
                           <p className="text-global-4 text-base sm:text-lg md:text-xl mb-4 sm:mb-6 leading-relaxed">
                             {filteredBlogs[3].short_description}

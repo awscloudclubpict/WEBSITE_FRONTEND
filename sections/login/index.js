@@ -4,6 +4,7 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
+import { useRouter } from "next/navigation"; 
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -13,7 +14,6 @@ export default function LoginPage() {
   const [mounted, setMounted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState(""); // <-- added success state
 
   useEffect(() => {
     setMounted(true);
@@ -39,7 +39,7 @@ export default function LoginPage() {
     }
 
     try {
-      const response = await fetch("https://website-backend-lkns.onrender.com/auth/login", {
+      const response = await fetch("https://webiste-aws.onrender.com/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -53,29 +53,20 @@ export default function LoginPage() {
       const data = await response.json();
 
       if (response.status === 200) {
-        // Support both shapes: { token, fullName, email } OR { user: {...}, token }
-        const token = data.token || (data.user && data.user.token) || null;
-        const user = data.user || { fullName: data.fullName, email: data.email };
+        // Success response - Log only token, name, and email
+        console.log("Token:", data.token);
+        console.log("Name:", data.fullName);
+        console.log("Email:", data.email);
 
-        if (token) {
-          localStorage.setItem("authToken", token);
+        localStorage.setItem("authToken", data.token);
+
+        if (rememberMe) {
+          localStorage.setItem("userEmail", data.email);
+          localStorage.setItem("userName", data.fullName);
         }
 
-        if (user) {
-          localStorage.setItem("user", JSON.stringify(user));
-          if (rememberMe) {
-            localStorage.setItem("userEmail", user.email || "");
-            localStorage.setItem("userName", user.fullName || "");
-          }
-        }
-
-        // show success message then redirect shortly
-        setSuccess("Login successful. Redirecting...");
-        console.log("Login successful", { email: user?.email || data.email });
-
-        setTimeout(() => {
-          window.location.href = "/";
-        }, 1200);
+        // Redirect to dashboard or home page
+        // window.location.href = "/dashboard";
 
       } else if (response.status === 400) {
         if (data.error && Array.isArray(data.error)) {
@@ -239,12 +230,13 @@ export default function LoginPage() {
               Don't have an account?{" "}
             </span>
             <button 
-              className="text-blue-400 hover:text-blue-300 text-lg sm:text-xl lg:text-2xl font-medium"
-              disabled={isLoading}
-              suppressHydrationWarning
-            >
-              Sign Up
-            </button>
+  className="text-blue-400 hover:text-blue-300 text-lg sm:text-xl lg:text-2xl font-medium"
+  disabled={isLoading}
+  onClick={() => router.push("/signup-student")} // <-- navigate to sign-up page
+>
+  Sign Up
+</button>
+
           </div>
         </div>
 
