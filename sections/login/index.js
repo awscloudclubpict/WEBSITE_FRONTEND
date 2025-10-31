@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect } from "react";
@@ -14,6 +13,7 @@ export default function LoginPage() {
   const [mounted, setMounted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const router = useRouter();
 
   useEffect(() => {
     setMounted(true);
@@ -22,7 +22,6 @@ export default function LoginPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-    setSuccess("");
     setIsLoading(true);
 
     // Basic client-side validation
@@ -53,20 +52,15 @@ export default function LoginPage() {
       const data = await response.json();
 
       if (response.status === 200) {
-        // Success response - Log only token, name, and email
-        console.log("Token:", data.token);
-        console.log("Name:", data.fullName);
-        console.log("Email:", data.email);
+        localStorage.setItem("user", JSON.stringify(data.user)); // store user details only
 
-        localStorage.setItem("authToken", data.token);
-
+        // If remember me is checked
         if (rememberMe) {
-          localStorage.setItem("userEmail", data.email);
-          localStorage.setItem("userName", data.fullName);
+          localStorage.setItem("rememberMe", "true");
         }
 
-        // Redirect to dashboard or home page
-        // window.location.href = "/dashboard";
+        // Redirect to home OR dashboard
+        router.push("/"); 
 
       } else if (response.status === 400) {
         if (data.error && Array.isArray(data.error)) {
@@ -128,13 +122,6 @@ export default function LoginPage() {
             {error && (
               <div className="bg-red-500/10 border border-red-500 text-red-500 px-4 py-3 rounded-lg text-sm sm:text-base">
                 {error}
-              </div>
-            )}
-
-            {/* Success Message */}
-            {success && (
-              <div className="bg-green-500/10 border border-green-500 text-green-500 px-4 py-3 rounded-lg text-sm sm:text-base">
-                {success}
               </div>
             )}
 
@@ -230,13 +217,12 @@ export default function LoginPage() {
               Don't have an account?{" "}
             </span>
             <button 
-  className="text-blue-400 hover:text-blue-300 text-lg sm:text-xl lg:text-2xl font-medium"
-  disabled={isLoading}
-  onClick={() => router.push("/signup-student")} // <-- navigate to sign-up page
->
-  Sign Up
-</button>
-
+              className="text-blue-400 hover:text-blue-300 text-lg sm:text-xl lg:text-2xl font-medium"
+              disabled={isLoading}
+              onClick={() => router.push("/signup-student")}
+            >
+              Sign Up
+            </button>
           </div>
         </div>
 
