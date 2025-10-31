@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from "react";
@@ -12,6 +13,7 @@ export default function LoginPage() {
   const [mounted, setMounted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState(""); // <-- added success state
 
   useEffect(() => {
     setMounted(true);
@@ -20,6 +22,7 @@ export default function LoginPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    setSuccess("");
     setIsLoading(true);
 
     // Basic client-side validation
@@ -50,20 +53,29 @@ export default function LoginPage() {
       const data = await response.json();
 
       if (response.status === 200) {
-        // Success response - Log only token, name, and email
-        console.log("Token:", data.token);
-        console.log("Name:", data.fullName);
-        console.log("Email:", data.email);
+        // Support both shapes: { token, fullName, email } OR { user: {...}, token }
+        const token = data.token || (data.user && data.user.token) || null;
+        const user = data.user || { fullName: data.fullName, email: data.email };
 
-        localStorage.setItem("authToken", data.token);
-
-        if (rememberMe) {
-          localStorage.setItem("userEmail", data.email);
-          localStorage.setItem("userName", data.fullName);
+        if (token) {
+          localStorage.setItem("authToken", token);
         }
 
-        // Redirect to dashboard or home page
-        // window.location.href = "/dashboard";
+        if (user) {
+          localStorage.setItem("user", JSON.stringify(user));
+          if (rememberMe) {
+            localStorage.setItem("userEmail", user.email || "");
+            localStorage.setItem("userName", user.fullName || "");
+          }
+        }
+
+        // show success message then redirect shortly
+        setSuccess("Login successful. Redirecting...");
+        console.log("Login successful", { email: user?.email || data.email });
+
+        setTimeout(() => {
+          window.location.href = "/";
+        }, 1200);
 
       } else if (response.status === 400) {
         if (data.error && Array.isArray(data.error)) {
@@ -125,6 +137,13 @@ export default function LoginPage() {
             {error && (
               <div className="bg-red-500/10 border border-red-500 text-red-500 px-4 py-3 rounded-lg text-sm sm:text-base">
                 {error}
+              </div>
+            )}
+
+            {/* Success Message */}
+            {success && (
+              <div className="bg-green-500/10 border border-green-500 text-green-500 px-4 py-3 rounded-lg text-sm sm:text-base">
+                {success}
               </div>
             )}
 
