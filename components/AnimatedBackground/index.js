@@ -6,7 +6,7 @@ import { useMemo } from "react";
   Optimized but visible AWS-themed animated background
 */
 
-export default function AnimatedBackground({ count = 5 }) {
+export default function AnimatedBackground({ count = 7 }) {
   const blobs = useMemo(() => {
     const arr = [];
     const awsColors = [210, 220, 230, 240, 250]; // Blue hues
@@ -16,9 +16,9 @@ export default function AnimatedBackground({ count = 5 }) {
       const size = sizes[i % sizes.length];
       const left = 10 + Math.round(Math.random() * 80);
       const top = 10 + Math.round(Math.random() * 80);
-      const duration = 20 + Math.round(Math.random() * 15);
-      const delay = -(Math.random() * 6).toFixed(2) + "s";
-      const blur = 25 + Math.round(Math.random() * 10); // Increased blur for softness
+      const duration = 7 + Math.round(Math.random() * 5);
+      const delay = -(Math.random() * 3).toFixed(2) + "s";
+      const blur = 10 + Math.round(Math.random() * 10); // Increased blur for softness
       const hue = awsColors[i % awsColors.length];
       const opacity = 0.35 + (Math.random() * 0.15); // Increased opacity for visibility
       const scale = 0.9 + Math.random() * 0.3;
