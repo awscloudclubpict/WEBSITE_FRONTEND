@@ -96,6 +96,11 @@ export default function Members() {
   useEffect(() => {
     checkAdminStatus();
     fetchMembers();
+    
+    // Initialize reveal animations after component mounts
+    import('../../utils/revealAnimation').then(({ revealAnimationManager }) => {
+      revealAnimationManager.autoInit();
+    });
   }, []);
 
   // Fetch members from backend
@@ -454,27 +459,33 @@ export default function Members() {
     );
 
   return (
-    <section className="members-section">
+    <section className="members-section" id="members">
       <div className="members-container">
-        <h2 className="members-title">Meet the Team</h2>
-        <p className="members-subtitle">Passionate. Skilled. United.</p>
+        <h2 className="members-title" data-reveal data-reveal-animation="fadeInUp">
+          Meet the Team
+        </h2>
+        <p className="members-subtitle" data-reveal data-reveal-animation="fadeInUp" data-reveal-delay="200">
+          Passionate. Skilled. United.
+        </p>
 
         {error && <div className="error-banner">{error}</div>}
 
-        <CategorySelector />
+        <div data-reveal data-reveal-animation="fadeInUp" data-reveal-delay="300">
+          <CategorySelector />
+        </div>
 
-        <div className="members-list-container">
+        <div className="members-list-container" data-reveal data-reveal-animation="fadeInUp" data-reveal-delay="400">
           {loading ? (
             <MembersSkeleton count={isMobile ? 4 : 6} />
           ) : members.length === 0 ? (
-            <div className="members-empty">
+            <div className="members-empty" data-reveal data-reveal-animation="fadeInUp">
               No members found for {activeCategory === "All" ? "any team" : `${activeCategory} team`}.
             </div>
           ) : (
             <div className="members-scroll-container">
-              <div className="members-list">
-                {members.map((member) => (
-                  <div key={member._id} className="member-card">
+              <div className="members-list" data-reveal data-reveal-animation="fadeInUp" data-reveal-stagger data-reveal-stagger-delay="150">
+                {members.map((member, index) => (
+                  <div key={member._id} className="member-card" data-reveal-stagger-item>
                     <div className="member-image-wrapper">
                       <Image
                         src={member.profileImage || "/default-avatar.jpg"}

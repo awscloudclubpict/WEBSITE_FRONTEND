@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Phone, Mail, MapPin } from "lucide-react";
 import { FaLinkedin, FaInstagram, FaMeetup } from "react-icons/fa";
 import emailjs from "@emailjs/browser"; // <-- import EmailJS
@@ -8,6 +8,13 @@ export default function ContactUs() {
   const [formData, setFormData] = useState({ name: "", email: "", message: "" });
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+
+  // Initialize reveal animations after component mounts
+  useEffect(() => {
+    import('../../utils/revealAnimation').then(({ revealAnimationManager }) => {
+      revealAnimationManager.autoInit();
+    });
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -82,43 +89,49 @@ export default function ContactUs() {
         alt="Cloud"
         className="absolute top-0 right-0 max-w-[220px] md:max-w-[280px] w-full h-auto opacity-100 pointer-events-none select-none z-0"
         style={{ objectFit: "contain" }}
+        data-reveal 
+        data-reveal-animation="fadeInRight" 
+        data-reveal-delay="200"
       />
 
       <div className="container-custom relative z-10 w-full">
         <div className="flex flex-col max-w-5xl w-full mx-auto space-y-8">
-          <div className="text-center space-y-3 px-4">
-            <h1 className="text-4xl sm:text-5xl font-bold">
+          {/* Top Title Section */}
+          <div className="text-center space-y-3 px-4" data-reveal data-reveal-animation="fadeInUp">
+            <h1 className="text-4xl sm:text-5xl font-bold" data-reveal data-reveal-animation="fadeInUp" data-reveal-delay="200">
               Get in{" "}
               <span className="bg-gradient-to-r from-[#327ED7] to-[#9E53D1] bg-clip-text text-transparent">
                 Touch
               </span>
             </h1>
-            <p className="text-2xl sm:text-3xl font-semibold text-gray-300">
+            <p className="text-2xl sm:text-3xl font-semibold text-gray-300" data-reveal data-reveal-animation="fadeInUp" data-reveal-delay="300">
               We're here to answer your questions or help you connect
             </p>
           </div>
 
           <div className="flex flex-col md:flex-row gap-8 md:gap-12 px-4">
-            <div className="flex-1 space-y-6 flex flex-col justify-center text-base">
-              <div className="space-y-6">
-                <div className="flex items-center space-x-3">
+            {/* Left Side - Contact Info */}
+            <div className="flex-1 space-y-6 flex flex-col justify-center text-base" data-reveal data-reveal-animation="fadeInLeft" data-reveal-delay="400">
+              <div className="space-y-6" data-reveal data-reveal-animation="fadeInUp" data-reveal-stagger data-reveal-stagger-delay="150">
+                <div className="flex items-center space-x-3" data-reveal-stagger-item>
                   <Phone className="text-purple-400 w-5 h-5" />
                   <span className="text-lg">+91 9090909090</span>
                 </div>
-                <div className="flex items-center space-x-3">
+                <div className="flex items-center space-x-3" data-reveal-stagger-item>
                   <MapPin className="text-purple-400 w-5 h-5" />
                   <span className="text-lg">PICT Campus, Pune, Maharashtra</span>
                 </div>
-                <div className="flex items-center space-x-3">
+                <div className="flex items-center space-x-3" data-reveal-stagger-item>
                   <Mail className="text-purple-400 w-5 h-5" />
                   <span className="text-lg">awscloudclub@pict.edu</span>
                 </div>
               </div>
-              <div className="flex space-x-7 text-2xl mt-4">
+              <div className="flex space-x-7 text-2xl mt-4" data-reveal data-reveal-animation="fadeInUp" data-reveal-stagger data-reveal-stagger-delay="100">
                 <a
                   href="https://www.linkedin.com/company/aws-cloud-club-pict/"
                   target="_blank"
                   rel="noopener noreferrer"
+                  data-reveal-stagger-item
                 >
                   <FaLinkedin className="cursor-pointer hover:text-purple-400" />
                 </a>
@@ -126,6 +139,7 @@ export default function ContactUs() {
                   href="https://www.instagram.com/awscloudclubs.pict/"
                   target="_blank"
                   rel="noopener noreferrer"
+                  data-reveal-stagger-item
                 >
                   <FaInstagram className="cursor-pointer hover:text-purple-400" />
                 </a>
@@ -133,15 +147,18 @@ export default function ContactUs() {
                   href="https://www.meetup.com/aws-cloud-club-at-pict/"
                   target="_blank"
                   rel="noopener noreferrer"
+                  data-reveal-stagger-item
                 >
                   <FaMeetup className="cursor-pointer hover:text-purple-400" />
                 </a>
               </div>
             </div>
 
-            <div className="flex-1 w-full md:w-auto max-w-md rounded-2xl p-6 shadow-lg bg-[#060c20]">
+            {/* Right Side - Contact Form */}
+            <div className="flex-1 w-full md:w-auto max-w-md rounded-2xl p-6 shadow-lg bg-[#060c20]" data-reveal data-reveal-animation="fadeInRight" data-reveal-delay="500">
               <form className="space-y-6" onSubmit={handleSubmit}>
-                <div className="flex flex-col">
+                {/* Name Field */}
+                <div className="flex flex-col" data-reveal data-reveal-animation="fadeInUp" data-reveal-delay="600">
                   <label className="mb-1 text-gray-300 font-medium">Your Name</label>
                   <input
                     type="text"
@@ -153,7 +170,8 @@ export default function ContactUs() {
                   />
                 </div>
 
-                <div className="flex flex-col">
+                {/* Email Field */}
+                <div className="flex flex-col" data-reveal data-reveal-animation="fadeInUp" data-reveal-delay="700">
                   <label className="mb-1 text-gray-300 font-medium">Your Email</label>
                   <input
                     type="email"
@@ -165,7 +183,8 @@ export default function ContactUs() {
                   />
                 </div>
 
-                <div className="flex flex-col">
+                {/* Message Field */}
+                <div className="flex flex-col" data-reveal data-reveal-animation="fadeInUp" data-reveal-delay="800">
                   <label className="mb-1 text-gray-300 font-medium">Message</label>
                   <textarea
                     name="message"
@@ -180,6 +199,9 @@ export default function ContactUs() {
                   type="submit"
                   className="w-full p-3 bg-yellow-400 text-black font-bold rounded-lg disabled:opacity-70"
                   disabled={loading}
+                  data-reveal 
+                  data-reveal-animation="scaleIn" 
+                  data-reveal-delay="900"
                 >
                   {loading ? "Sending..." : "Send Message"}
                 </button>

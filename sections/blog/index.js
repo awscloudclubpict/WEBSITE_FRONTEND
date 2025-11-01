@@ -21,6 +21,11 @@ const Blogs = () => {
 
   useEffect(() => {
     loadInitialData();
+    
+    // Initialize reveal animations after component mounts
+    import('../../utils/revealAnimation').then(({ revealAnimationManager }) => {
+      revealAnimationManager.autoInit();
+    });
   }, []);
 
   useEffect(() => {
@@ -183,12 +188,12 @@ const Blogs = () => {
     <section id="blogs" className="py-8 md:py-12 lg:py-16 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="flex flex-col lg:flex-row items-start justify-between mb-8 lg:mb-12">
-          <div className="w-full lg:w-1/2 mb-6 lg:mb-0 lg:pr-8">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gradient-blue-purple mb-4">
+        <div className="flex flex-col lg:flex-row items-start justify-between mb-8 lg:mb-12" data-reveal data-reveal-animation="fadeInUp">
+          <div className="w-full lg:w-1/2 mb-6 lg:mb-0 lg:pr-8" data-reveal data-reveal-animation="fadeInLeft">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gradient-blue-purple mb-4" data-reveal data-reveal-animation="fadeInUp" data-reveal-delay="200">
               Student Blogs
             </h2>
-            <p className="text-global-4 text-lg sm:text-xl md:text-2xl lg:text-3xl mb-4 lg:mb-6">
+            <p className="text-global-4 text-lg sm:text-xl md:text-2xl lg:text-3xl mb-4 lg:mb-6" data-reveal data-reveal-animation="fadeInUp" data-reveal-delay="300">
               Real Voices. Real Stories.<br />By our community.
             </p>
             {user?.role === 'admin' && (
@@ -197,24 +202,30 @@ const Blogs = () => {
                 size="md" 
                 onClick={() => setShowAddBlogForm(true)}
                 className="text-sm sm:text-base"
+                data-reveal 
+                data-reveal-animation="fadeInUp" 
+                data-reveal-delay="400"
               >
                 + Add Blog
               </Button>
             )}
           </div>
-          <div className="w-full lg:w-1/2 flex justify-center lg:justify-end">
+          <div className="w-full lg:w-1/2 flex justify-center lg:justify-end" data-reveal data-reveal-animation="fadeInRight">
             <img
               src="/images/img_image_5.png"
               alt="Student Blogs Illustration"
               className="w-48 sm:w-56 md:w-64 lg:w-72 xl:w-80"
               style={{ maxWidth: '100%', height: 'auto' }}
+              data-reveal 
+              data-reveal-animation="scaleIn" 
+              data-reveal-delay="500"
             />
           </div>
         </div>
 
         {/* Blog Filters */}
-        <div className="flex flex-wrap justify-center gap-3 sm:gap-4 mb-8 lg:mb-12">
-          {blogFilters.map((filter) => (
+        <div className="flex flex-wrap justify-center gap-3 sm:gap-4 mb-8 lg:mb-12" data-reveal data-reveal-animation="fadeInUp" data-reveal-stagger data-reveal-stagger-delay="100">
+          {blogFilters.map((filter, index) => (
             <button
               key={filter}
               onClick={() => setSelectedBlogFilter(filter)}
@@ -223,6 +234,7 @@ const Blogs = () => {
                   ? 'border-[#327dd6] text-[#327dd6] bg-transparent'
                   : 'border-[#ffffff4c] text-global-4 bg-transparent hover:border-[#327dd6] hover:text-[#327dd6]'
               }`}
+              data-reveal-stagger-item
             >
               {filter}
             </button>

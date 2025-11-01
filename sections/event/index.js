@@ -34,6 +34,8 @@ export default function EventSection() {
   const [user, setUser] = useState(null);
   const [showAddEventModal, setShowAddEventModal] = useState(false);
   const [showUpdateEventModal, setShowUpdateEventModal] = useState(false);
+  const [showRegistrationModal, setShowRegistrationModal] = useState(false);
+  const [selectedEventForRegistration, setSelectedEventForRegistration] = useState(null);
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(false);
   const [actionLoading, setActionLoading] = useState(false);
@@ -62,6 +64,11 @@ export default function EventSection() {
   useEffect(() => {
     checkAdminStatus();
     fetchEvents();
+    
+    // Initialize reveal animations after component mounts
+    import('../../utils/revealAnimation').then(({ revealAnimationManager }) => {
+      revealAnimationManager.autoInit();
+    });
   }, []);
 
   // Check if user is logged in as admin
@@ -356,19 +363,62 @@ export default function EventSection() {
     setShowUpdateEventModal(true);
   };
 
+  // Open registration modal
+  const openRegistrationModal = (event) => {
+    setSelectedEventForRegistration(event);
+    setShowRegistrationModal(true);
+  };
+
+  // Handle event registration
+  const handleEventRegistration = async () => {
+    if (!selectedEventForRegistration) return;
+
+    // For now, just console log the event data
+    console.log('Registering for event:', {
+      event_id: selectedEventForRegistration.event_id,
+      title: selectedEventForRegistration.title,
+      description: selectedEventForRegistration.description,
+      date: selectedEventForRegistration.date,
+      time: selectedEventForRegistration.time,
+      venue: selectedEventForRegistration.venue,
+      mode: selectedEventForRegistration.mode,
+      status: selectedEventForRegistration.status,
+      category: selectedEventForRegistration.category,
+      registration_link: selectedEventForRegistration.registration_link,
+      banner_image_url: selectedEventForRegistration.banner_image_url
+    });
+
+    // Here you can add the actual API call later
+    // const response = await fetch(`${API_BASE_URL}/events/register`, {
+    //   method: 'POST',
+    //   headers: { 'Content-Type': 'application/json' },
+    //   body: JSON.stringify({ event_id: selectedEventForRegistration.event_id })
+    // });
+
+    alert(`✅ Registration confirmed for "${selectedEventForRegistration.title}"!`);
+    setShowRegistrationModal(false);
+    setSelectedEventForRegistration(null);
+  };
+
+  // Close registration modal
+  const closeRegistrationModal = () => {
+    setShowRegistrationModal(false);
+    setSelectedEventForRegistration(null);
+  };
+
   return (
-    <section className="event-section">
+    <section className="event-section" id="events">
       <div className="event-container">
         {/* Header */}
-        <div className="event-header">
-          <div className="event-header-content">
-            <h2 className="event-title">
+        <div className="event-header" data-reveal data-reveal-animation="fadeInUp">
+          <div className="event-header-content" data-reveal data-reveal-animation="fadeInLeft">
+            <h2 className="event-title" data-reveal data-reveal-animation="fadeInUp" data-reveal-delay="200">
               Explore Our <span className="event-gradient-text">Events</span>
             </h2>
-            <p className="event-subtitle">
+            <p className="event-subtitle" data-reveal data-reveal-animation="fadeInUp" data-reveal-delay="300">
               Stay tuned with workshops, webinars, and cloud camps.
             </p>
-            <div className="filter-container">
+            <div className="filter-container" data-reveal data-reveal-animation="fadeInUp" data-reveal-stagger data-reveal-stagger-delay="100">
               {["All", "Workshop", "Webinar", "Conference", "Seminar"].map(
                 (filter) => (
                   <button
@@ -379,6 +429,7 @@ export default function EventSection() {
                         : "filter-button-inactive"
                     }`}
                     onClick={() => setActiveFilter(filter)}
+                    data-reveal-stagger-item
                   >
                     {filter}
                   </button>
@@ -389,14 +440,15 @@ export default function EventSection() {
                   className="filter-button filter-button-add"
                   onClick={() => setShowAddEventModal(true)}
                   disabled={actionLoading}
+                  data-reveal-stagger-item
                 >
                   {actionLoading ? "Loading..." : "+ Add Event"}
                 </button>
               )}
             </div>
           </div>
-          <div className="event-image-container">
-            <div className="event-image">
+          <div className="event-image-container" data-reveal data-reveal-animation="fadeInRight">
+            <div className="event-image" data-reveal data-reveal-animation="scaleIn" data-reveal-delay="400">
               <Image
                 src="/calendar-cloud.png"
                 alt="Calendar and Cloud"
@@ -409,7 +461,7 @@ export default function EventSection() {
         </div>
 
         {/* Events Carousel */}
-        <div className="event-carousel">
+        <div className="event-carousel" data-reveal data-reveal-animation="fadeInUp" data-reveal-delay="200">
           <button
             onClick={() => scrollCarousel("left")}
             disabled={isLeftDisabled}
@@ -418,6 +470,9 @@ export default function EventSection() {
                 ? "carousel-arrow-disabled"
                 : "carousel-arrow-enabled"
             }`}
+            data-reveal 
+            data-reveal-animation="fadeInLeft" 
+            data-reveal-delay="300"
           >
             <svg
               className="w-6 h-6 text-white"
@@ -438,13 +493,13 @@ export default function EventSection() {
           {loading ? (
             <EventSkeleton count={visibleEvents} />
           ) : events.length === 0 ? (
-            <div className="no-events-message">
+            <div className="no-events-message" data-reveal data-reveal-animation="fadeInUp">
               <h3>No events found</h3>
               <p>Check back later for upcoming events!</p>
             </div>
           ) : (
-            <div className="carousel-container">
-              {getCurrentEvents().map((event) => {
+            <div className="carousel-container" data-reveal data-reveal-animation="fadeInUp" data-reveal-stagger data-reveal-stagger-delay="150">
+              {getCurrentEvents().map((event, index) => {
                 const { day, month } = formatDate(event.date);
 
                 // Show "Register" for all events today or in the future
@@ -457,7 +512,7 @@ export default function EventSection() {
                 const isPast = eventDate < today;
 
                 return (
-                  <div key={event.event_id} className="event-card">
+                  <div key={event.event_id} className="event-card" data-reveal-stagger-item>
                     <div className="event-card-inner">
                       {/* Event Header with Past Label and Admin Actions */}
                       <div className="event-header-row">
@@ -519,14 +574,12 @@ export default function EventSection() {
                             </span>
                           </div>
                           {isUpcoming && event.registration_link && (
-                            <a
-                              href={event.registration_link}
-                              target="_blank"
-                              rel="noopener noreferrer"
+                            <button
+                              onClick={() => openRegistrationModal(event)}
                               className="event-register-button"
                             >
                               Register
-                            </a>
+                            </button>
                           )}
                         </div>
                       </div>
@@ -545,6 +598,9 @@ export default function EventSection() {
                 ? "carousel-arrow-disabled"
                 : "carousel-arrow-enabled"
             }`}
+            data-reveal 
+            data-reveal-animation="fadeInRight" 
+            data-reveal-delay="300"
           >
             <svg
               className="w-6 h-6 text-white"
@@ -564,14 +620,14 @@ export default function EventSection() {
         </div>
 
         {/* CTA */}
-        <div className="event-cta">
-          <h1 className="event-cta-title">
+        <div className="event-cta" data-reveal data-reveal-animation="fadeInUp" data-reveal-delay="400">
+          <h1 className="event-cta-title" data-reveal data-reveal-animation="fadeInUp" data-reveal-delay="500">
             Don't miss our next hands-on event!
           </h1>
-          <p className="event-cta-subtitle">
+          <p className="event-cta-subtitle" data-reveal data-reveal-animation="fadeInUp" data-reveal-delay="600">
             Be part of the builder's journey.
           </p>
-          <button className="event-cta-button">
+          <button className="event-cta-button" data-reveal data-reveal-animation="scaleIn" data-reveal-delay="700">
             <a
               href="https://www.meetup.com/aws-cloud-club-at-pict/"
               target="_blank"
@@ -997,6 +1053,129 @@ export default function EventSection() {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Registration Confirmation Modal */}
+      {showRegistrationModal && selectedEventForRegistration && (
+        <div className="event-form-overlay">
+          <div className="event-registration-modal">
+            {/* Event Banner */}
+            {selectedEventForRegistration.banner_image_url && (
+              <div className="registration-banner">
+                <img 
+                  src={selectedEventForRegistration.banner_image_url} 
+                  alt={selectedEventForRegistration.title}
+                  className="registration-banner-image"
+                />
+              </div>
+            )}
+
+            {/* Modal Header */}
+            <div className="registration-header">
+              <h2 className="registration-title">
+                {selectedEventForRegistration.title}
+              </h2>
+              <button
+                className="registration-close"
+                onClick={closeRegistrationModal}
+              >
+                &times;
+              </button>
+            </div>
+
+            <div className="registration-content">
+              {/* Event Meta Tags */}
+              <div className="registration-meta">
+                <span className="registration-category">
+                  {selectedEventForRegistration.category}
+                </span>
+                <span className="registration-mode">
+                  {selectedEventForRegistration.mode}
+                </span>
+                <span className="registration-status">
+                  {selectedEventForRegistration.status}
+                </span>
+              </div>
+
+              {/* Event Description */}
+              <div className="registration-description">
+                {selectedEventForRegistration.description}
+              </div>
+
+              {/* Event Info Grid */}
+              <div className="registration-info-grid">
+                <div className="registration-info-item">
+                  <div className="registration-info-label">Date</div>
+                  <div className="registration-info-value">
+                    {new Date(selectedEventForRegistration.date).toLocaleDateString('en-US', {
+                      weekday: 'long',
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric'
+                    })}
+                  </div>
+                </div>
+
+                {selectedEventForRegistration.time && (
+                  <div className="registration-info-item">
+                    <div className="registration-info-label">Time</div>
+                    <div className="registration-info-value">
+                      {selectedEventForRegistration.time}
+                    </div>
+                  </div>
+                )}
+
+                <div className="registration-info-item">
+                  <div className="registration-info-label">Venue</div>
+                  <div className="registration-info-value">
+                    {selectedEventForRegistration.venue}
+                  </div>
+                </div>
+
+                <div className="registration-info-item">
+                  <div className="registration-info-label">Mode</div>
+                  <div className="registration-info-value">
+                    {selectedEventForRegistration.mode}
+                  </div>
+                </div>
+
+                <div className="registration-info-item">
+                  <div className="registration-info-label">Event ID</div>
+                  <div className="registration-info-value">
+                    {selectedEventForRegistration.event_id}
+                  </div>
+                </div>
+              </div>
+
+              {/* Registration Confirmation */}
+              <div className="registration-confirmation">
+                <h4>Confirm Your Registration</h4>
+                <p>
+                  Are you sure you want to register for "{selectedEventForRegistration.title}"? 
+                  You will receive a confirmation email with further details.
+                </p>
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="registration-actions">
+              <button
+                type="button"
+                className="btn-cancel"
+                onClick={closeRegistrationModal}
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                className="btn-confirm"
+                onClick={handleEventRegistration}
+              >
+                Confirm Registration
+              </button>
+            </div>
           </div>
         </div>
       )}

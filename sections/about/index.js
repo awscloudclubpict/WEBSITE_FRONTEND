@@ -1,10 +1,20 @@
 import Image from "next/image";
+import { useEffect } from "react";
 
 export default function About() {
+  // Initialize reveal animations after component mounts
+  useEffect(() => {
+    // Import and initialize reveal animation manager
+    import('../../utils/revealAnimation').then(({ revealAnimationManager }) => {
+      // Auto-initialize will handle all elements with data-reveal attribute
+      revealAnimationManager.autoInit();
+    });
+  }, []);
+
   return (
-    <section className="about-section">
+    <section className="about-section" id="about">
       <div className="about-container">
-        <div className="about-header">
+        <div className="about-header" data-reveal data-reveal-animation="fadeInUp">
           <h1 className="about-title">
             About <span className="about-gradient">AWS</span>
             <br />
@@ -12,15 +22,19 @@ export default function About() {
           </h1>
         </div>
         <div className="about-main">
-          <div className="about-left">
-            <h2 className="about-subtitle">Who Are We?</h2>
-            <p className="about-desc">
+          <div className="about-left" data-reveal data-reveal-animation="fadeInLeft">
+            <h2 className="about-subtitle" data-reveal data-reveal-animation="fadeInUp" data-reveal-delay="200">
+              Who Are We?
+            </h2>
+            <p className="about-desc" data-reveal data-reveal-animation="fadeInUp" data-reveal-delay="300">
               AWS Cloud Club PICT is a student-led community focused on helping cloud enthusiasts learn, grow, and connect.
               We empower beginners to explore AWS technologies and build practical solutions through collaborative learning.
             </p>
-            <h2 className="about-subtitle">What do we Offer?</h2>
-            <div className="about-stats">
-              <div className="stat-item">
+            <h2 className="about-subtitle" data-reveal data-reveal-animation="fadeInUp" data-reveal-delay="400">
+              What do we Offer?
+            </h2>
+            <div className="about-stats" data-reveal data-reveal-animation="fadeInUp" data-reveal-stagger data-reveal-stagger-delay="150">
+              <div className="stat-item" data-reveal-stagger-item>
                 <div className="stat-content">
                   <div className="stat-icon">
                     <img src="/tick.png" alt="Members Icon" width={40} height={40} />
@@ -31,7 +45,7 @@ export default function About() {
                   </div>
                 </div>
               </div>
-              <div className="stat-item">
+              <div className="stat-item" data-reveal-stagger-item>
                 <div className="stat-content">
                   <div className="stat-icon">
                     <img src="/certified.png" alt="Members Icon" width={40} height={40} />
@@ -42,7 +56,7 @@ export default function About() {
                   </div>
                 </div>
               </div>
-              <div className="stat-item">
+              <div className="stat-item" data-reveal-stagger-item>
                 <div className="stat-content">
                   <div className="stat-icon">
                     <img src="/calendar.png" alt="Members Icon" width={40} height={40} />
@@ -54,15 +68,15 @@ export default function About() {
                 </div>
               </div>
             </div>
-            <ul className="about-list">
-              <li>Beginner-friendly learning environment</li>
-              <li>Collaboration with like-minded students</li>
-              <li>Idea brainstorming and mentorship</li>
-              <li>Real-world project guidance</li>
+            <ul className="about-list" data-reveal data-reveal-animation="fadeInUp" data-reveal-stagger data-reveal-stagger-delay="100">
+              <li data-reveal-stagger-item>Beginner-friendly learning environment</li>
+              <li data-reveal-stagger-item>Collaboration with like-minded students</li>
+              <li data-reveal-stagger-item>Idea brainstorming and mentorship</li>
+              <li data-reveal-stagger-item>Real-world project guidance</li>
             </ul>
           </div>
-          <div className="about-right">
-            <div className="about-image-wrapper">
+          <div className="about-right" data-reveal data-reveal-animation="fadeInRight">
+            <div className="about-image-wrapper" data-reveal data-reveal-animation="scaleIn" data-reveal-delay="200">
               <Image
                 src="/club-photo.jpg"
                 alt="AWS Cloud Club Group"
@@ -70,7 +84,7 @@ export default function About() {
                 height={200}
                 className="about-image"
               />
-              <div className="about-avatar">
+              <div className="about-avatar" data-reveal data-reveal-animation="scaleIn" data-reveal-delay="400">
                 <Image
                   src="/avatar.jpeg"
                   alt="Club Avatar"
@@ -79,22 +93,22 @@ export default function About() {
                 />
               </div>
             </div>
-            <div className="about-timeline">
-              <div className="timeline-item">
+            <div className="about-timeline" data-reveal data-reveal-animation="fadeInUp" data-reveal-stagger data-reveal-stagger-delay="200">
+              <div className="timeline-item" data-reveal-stagger-item>
                 <div className="timeline-dot"></div>
                 <div className="timeline-content">
                   <div className="timeline-year">2023</div>
                   <div className="timeline-desc">Club Founded</div>
                 </div>
               </div>
-              <div className="timeline-item">
+              <div className="timeline-item" data-reveal-stagger-item>
                 <div className="timeline-dot"></div>
                 <div className="timeline-content">
                   <div className="timeline-year">2024</div>
                   <div className="timeline-desc">First AWS Workshop</div>
                 </div>
               </div>
-              <div className="timeline-item">
+              <div className="timeline-item" data-reveal-stagger-item>
                 <div className="timeline-dot"></div>
                 <div className="timeline-content">
                   <div className="timeline-year">2025</div>
