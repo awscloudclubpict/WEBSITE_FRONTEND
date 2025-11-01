@@ -261,8 +261,11 @@ export default function Home() {
                     style={{ aspectRatio: "1/1" }}
                     poster="/images/video-poster.jpg"
                   >
-                    <source src="/videos/IMG_5161.MOV" type="video/mp4" />
-                    <source src="/videos/IMG_5161.webm" type="video/webm" />
+                    {/* Replace YOUR_FILE_ID with your actual Google Drive file ID */}
+                    <source 
+                      src="https://ik.imagekit.io/apy4pzwspm/AWS-video%20(1).mp4?updatedAt=1762002401954" 
+                      type="video/mp4" 
+                    />
                     Your browser does not support the video tag.
                   </video>
                   
