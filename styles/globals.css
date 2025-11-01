@@ -1,0 +1,205 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Istok+Web:wght@400;700&family=Inria+Sans:wght@400;700&display=swap');
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+  font-family: 'Inter', 'Istok Web', 'Inria Sans', sans-serif;
+  background-color: #060717;
+  color: white;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+/* @media (min-width: 768px) {
+  html, body {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+} */
+
+@media (min-width: 768px) {
+  html, body {
+    padding-left: 4rem;
+    padding-right: 4rem;
+  }
+}
+
+body {
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #060c20;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #327dd6;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #2563eb;
+}
+
+/* Custom utilities */
+.container-custom {
+  width: 100%;
+  max-width: 1280px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+@media (min-width: 640px) {
+  .container-custom {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .container-custom {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+.section-padding {
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+}
+
+@media (min-width: 768px) {
+  .section-padding {
+    padding-top: 5rem;
+    padding-bottom: 5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .section-padding {
+    padding-top: 7rem;
+    padding-bottom: 7rem;
+  }
+}
+
+.text-responsive {
+  font-size: clamp(1rem, 2.5vw, 2rem);
+}
+
+.text-responsive-lg {
+  font-size: clamp(1.5rem, 4vw, 3rem);
+}
+
+.text-responsive-xl {
+  font-size: clamp(2rem, 5vw, 4rem);
+}
+
+/* Global Colors */
+.bg-global-1 { background-color: #060717; }
+.bg-global-2 { background-color: #060c20; }
+.bg-global-3 { background-color: #071128; }
+.bg-global-4 { background-color: #0711287c; }
+.bg-global-5 { background-color: #091734; }
+.bg-global-6 { background-color: #09173499; }
+.bg-global-7 { background-color: #1119407f; }
+.bg-global-8 { background-color: #327dd6; }
+.bg-global-9 { background-color: #f4b631; }
+.bg-global-10 { background-color: #ffffff; }
+
+.text-global-1 { color: #000000; }
+.text-global-2 { color: #327dd6; }
+.text-global-3 { color: #f4b631; }
+.text-global-4 { color: #ffffff; }
+.text-global-5 { color: #ffffff99; }
+
+.text-header-1 { color: #67a5de; }
+
+.bg-button-1 { background-color: #ffcb18; }
+
+/* Custom gradients */
+.gradient-blue-purple {
+  background: linear-gradient(90deg, #327dd6 0%, #9e53d1 100%);
+}
+
+.text-gradient-blue-purple {
+  background: linear-gradient(90deg, #327dd6 0%, #9e53d1 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Hover effects */
+.card-hover {
+  transition: all 0.3s ease;
+}
+
+/* Prevent Chrome/Edge autofill from turning input white */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0px 1000px #060c20 inset !important;
+  -webkit-text-fill-color: #ffffff !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+/* Custom styles for the event section */
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;  /* Chrome, Safari and Opera */
+}
+
+/* Ensure proper gradient application */
+.bg-gradient-from-30 {
+  background: linear-gradient(90deg, #0F2655 30%, #9E53D1 100%);
+}
+
+/* Custom styles for the event section */
+.calendar-cloud-placeholder {
+  background: linear-gradient(135deg, #0F2655 0%, #9E53D1 100%);
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+}
+
+/* Smooth transitions for carousel */
+.transition-transform {
+  transition-property: transform;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 300ms;
+}
