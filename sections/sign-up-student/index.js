@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 const SignUpStyles = () => (
   <style>{`
     .signup-container {
-      background-color: #060717;
+      background: transparent;
       min-height: 100vh;
       display: flex;
       align-items: center;

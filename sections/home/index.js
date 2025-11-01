@@ -257,7 +257,7 @@ export default function Home() {
             </li>
             <li className="flex items-center text-gray-300" data-reveal-stagger-item>
               <span className="text-[#327dd6] mr-2">✔</span>
-              2000+ Active Members
+              3000+ Active Members
             </li>
             <li className="flex items-center text-gray-300" data-reveal-stagger-item>
               <span className="text-[#327dd6] mr-2">✔</span>

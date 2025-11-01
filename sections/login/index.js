@@ -91,7 +91,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#060717] relative overflow-hidden" suppressHydrationWarning>
+    <div className="min-h-screen bg-transparent relative overflow-hidden" suppressHydrationWarning>
       {/*logo*/}
       <div className="absolute left-4 sm:left-6 lg:left-10 top-4 z-50">
         <Image

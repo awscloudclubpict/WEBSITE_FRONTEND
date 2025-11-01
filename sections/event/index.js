@@ -573,14 +573,14 @@ export default function EventSection() {
                               {event.venue}
                             </span>
                           </div>
-                          {isUpcoming && event.registration_link && (
+                          {/* {isUpcoming && event.registration_link && (
                             <button
                               onClick={() => openRegistrationModal(event)}
                               className="event-register-button"
                             >
                               Register
                             </button>
-                          )}
+                          )} */}
                         </div>
                       </div>
                     </div>

@@ -9,7 +9,6 @@ const TEAM_CATEGORIES = [
   "Design",
   "Social Media",
   "Documentation",
-  "Tech+Blog",
 ];
 
 // Skeleton Loading Component
@@ -118,7 +117,6 @@ export default function Members() {
           "Design": "design",
           "Social Media": "social-media",
           "Documentation": "documentation",
-          "Tech+Blog": "tech-blog"
         };
         
         if (categoryMap[category]) {
