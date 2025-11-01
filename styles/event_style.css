@@ -1,7 +1,7 @@
 /* Event Section Styles */
 .event-section {
   padding: 4rem 1.5rem;
-  background-color: #060717;
+  background: transparent;
   position: relative;
 }
 
@@ -281,7 +281,7 @@
 
 /* CTA Section */
 .event-cta {
-  background-color: #060717;
+  background: transparent;
   border-radius: 1rem;
   padding: 2rem;
   text-align: center;

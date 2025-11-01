@@ -43,8 +43,8 @@ export default function ContactUs() {
   // Success Modal (same as WriteBlogForm)
   if (submitted) {
     return (
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-        <div className="bg-[#071128] rounded-2xl shadow-xl border border-gray-600 p-8 max-w-md w-full">
+      <div className="fixed inset-0 bg-transparent  flex items-center justify-center z-50 p-4">
+        <div className="bg-trasparent rounded-2xl shadow-xl border border-gray-600 p-8 max-w-md w-full">
           <div className="text-center">
             <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
               <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -70,7 +70,7 @@ export default function ContactUs() {
   return (
     <section
       id="contact"
-      className="relative min-h-screen bg-global-1 flex items-center section-padding overflow-hidden"
+      className="relative min-h-screen bg-transparent flex items-center section-padding overflow-hidden"
     >
       {/* Cloud Image */}
       <img

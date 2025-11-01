@@ -26,7 +26,7 @@ export default function About() {
                     <img src="/tick.png" alt="Members Icon" width={40} height={40} />
                   </div>
                   <div className="stat-text">
-                    <div className="stat-number">200+</div>
+                    <div className="stat-number">3000+</div>
                     <div className="stat-label">Club <br></br>Members</div>
                   </div>
                 </div>

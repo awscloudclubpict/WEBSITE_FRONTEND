@@ -1,0 +1,86 @@
+/* Highly optimized AWS-themed animated background */
+.animated-bg-root {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  background: 
+    linear-gradient(135deg, #060717 0%, #0a102c 100%),
+    radial-gradient(ellipse at 20% 20%, rgba(15, 38, 85, 0.2) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 80%, rgba(158, 83, 209, 0.15) 0%, transparent 50%);
+}
+
+/* Optimized blobs - removed heavy effects */
+.bg-blob {
+  position: absolute;
+  transform: translate3d(-50%, -50%, 0);
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 40% 30%,
+    rgba(255, 255, 255, 0.4) 0%,
+    hsla(var(--blob-hue, 210), 80%, 70%, 0.35) 40%,
+    transparent 70%
+  );
+  opacity: 0.5; /* High visibility */
+  animation: optimized-move 40s infinite ease-in-out;
+  mix-blend-mode: screen;
+  /* Removed: box-shadow, border, pseudo-elements, multiple animations */
+}
+
+/* Single optimized animation */
+@keyframes optimized-move {
+  0% { 
+    transform: translate3d(-50%, -50%, 0) translate(0, 0) scale(1);
+    opacity: 0.5;
+  }
+  25% { 
+    transform: translate3d(-50%, -50%, 0) translate(3vw, -2vh) scale(1.05);
+    opacity: 0.6;
+  }
+  50% { 
+    transform: translate3d(-50%, -50%, 0) translate(-2vw, 2vh) scale(0.95);
+    opacity: 0.4;
+  }
+  75% { 
+    transform: translate3d(-50%, -50%, 0) translate(2vw, 1vh) scale(1.02);
+    opacity: 0.55;
+  }
+  100% { 
+    transform: translate3d(-50%, -50%, 0) translate(0, 0) scale(1);
+    opacity: 0.5;
+  }
+}
+
+/* Apply single animation */
+.bg-blob {
+  animation-name: optimized-move;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+
+/* Disable animations for reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .bg-blob {
+    animation: none;
+    opacity: 0.3;
+  }
+}
+
+/* Mobile: further optimization */
+@media (max-width: 768px) {
+  .bg-blob {
+    animation-duration: 60s !important; /* Even slower on mobile */
+    opacity: 0.4;
+  }
+  
+  /* Hide one blob on mobile */
+  .bg-blob:nth-child(3) {
+    display: none;
+  }
+}
+
+.site-root {
+  position: relative;
+  z-index: 10;
+}
