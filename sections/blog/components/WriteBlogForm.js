@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import emailjs from "@emailjs/browser";
 
 const WriteBlogForm = ({ onClose }) => {
   const [formData, setFormData] = useState({
@@ -66,85 +67,48 @@ const WriteBlogForm = ({ onClose }) => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setError('');
+  e.preventDefault();
+  setLoading(true);
+  setError("");
 
-    try {
-      // Validate form before submission
-      const validationError = validateForm();
-      if (validationError) {
-        throw new Error(validationError);
-      }
-
-      console.log("Submitting formData:", formData); 
-      
-      // Prepare data with final category
-      const finalCategory = formData.category === 'Other' ? formData.customCategory : formData.category;
-      
-      const emailData = {
-        name: formData.name.trim(),
-        email: formData.email.trim(),
-        title: formData.title.trim(),
-        abstract: formData.abstract.trim(),
-        category: finalCategory,
-        additionalInfo: formData.additionalInfo?.trim() || ""
-      };
-
-      console.log("Sending email data:", emailData);
-
-      const response = await fetch("http://localhost:3001/blogs/sendEmail", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(emailData),
-      });
-
-      console.log("Response status:", response.status);
-
-      // Handle different response types
-      if (!response.ok) {
-        let errorMessage = `Submission failed (Status: ${response.status})`;
-        
-        try {
-          const errorData = await response.json();
-          errorMessage = errorData.error || errorData.message || errorMessage;
-        } catch {
-          const errorText = await response.text();
-          if (errorText) errorMessage = errorText;
-        }
-        
-        throw new Error(errorMessage);
-      }
-
-      const result = await response.json();
-      console.log("Success response:", result);
-
-      if (result.error) {
-        throw new Error(result.error);
-      }
-
-      // Success - show confirmation
-      setSubmitted(true);
-      
-    } catch (error) {
-      console.error("Error submitting form:", error);
-      
-      // User-friendly error messages
-      let userErrorMessage = "Failed to submit your blog abstract. ";
-      
-      if (error.message.includes('network') || error.message.includes('fetch')) {
-        userErrorMessage += "Please check your internet connection and try again.";
-      } else if (error.message.includes('500')) {
-        userErrorMessage += "Our server is temporarily unavailable. Please try again in a few minutes.";
-      } else {
-        userErrorMessage += error.message;
-      }
-      
-      setError(userErrorMessage);
-    } finally {
-      setLoading(false);
+  try {
+    // Validate form before submission
+    const validationError = validateForm();
+    if (validationError) {
+      throw new Error(validationError);
     }
-  };
+
+    const finalCategory =
+      formData.category === "Other" ? formData.customCategory : formData.category;
+
+    const emailData = {
+      name: formData.name.trim(),
+      email: formData.email.trim(),
+      title: formData.title.trim(),
+      abstract: formData.abstract.trim(),
+      category: finalCategory,
+      additionalInfo: formData.additionalInfo?.trim() || "",
+    };
+
+    console.log("Sending email with:", emailData);
+
+    await emailjs.send(
+      "service_cp4489k",     // replace this
+      "template_dasq5tn",    // replace this
+      emailData,
+      "Z_DVGfOaaMSrZYA_K"      // replace this
+    );
+
+    setSubmitted(true);
+
+  } catch (error) {
+    console.error("EmailJS Error:", error);
+    setError("Failed to send email. Please try again.");
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   // Professional Success Modal
   if (submitted) {

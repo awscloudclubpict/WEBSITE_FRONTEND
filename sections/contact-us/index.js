@@ -2,11 +2,12 @@
 import React, { useState } from "react";
 import { Phone, Mail, MapPin } from "lucide-react";
 import { FaLinkedin, FaInstagram, FaMeetup } from "react-icons/fa";
+import emailjs from "@emailjs/browser"; // <-- import EmailJS
 
 export default function ContactUs() {
   const [formData, setFormData] = useState({ name: "", email: "", message: "" });
   const [loading, setLoading] = useState(false);
-  const [submitted, setSubmitted] = useState(false); // Add submitted state
+  const [submitted, setSubmitted] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -17,38 +18,42 @@ export default function ContactUs() {
     e.preventDefault();
     setLoading(true);
 
+    // Replace the following with your EmailJS keys
+    const SERVICE_ID = "service_xsxyyko";
+    const TEMPLATE_ID = "template_3hmj5jo";
+    const PUBLIC_KEY = "I-juszNd2s2kQCJCH";
+
     try {
-      const res = await fetch("http://localhost:3001/api/contact/send", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
-
-      const data = await res.json();
-
-      if (res.ok) {
-        setSubmitted(true); // Show success modal instead of alert
-        setFormData({ name: "", email: "", message: "" });
-      } else {
-        alert(data.error || "Something went wrong!");
-      }
+      await emailjs.send(SERVICE_ID, TEMPLATE_ID, formData, PUBLIC_KEY);
+      setSubmitted(true);
+      setFormData({ name: "", email: "", message: "" });
     } catch (err) {
-      console.error(err);
+      console.error("EmailJS error:", err);
       alert("Failed to send message. Please try again.");
     } finally {
       setLoading(false);
     }
   };
 
-  // Success Modal (same as WriteBlogForm)
+  // Success Modal
   if (submitted) {
     return (
-      <div className="fixed inset-0 bg-transparent  flex items-center justify-center z-50 p-4">
-        <div className="bg-trasparent rounded-2xl shadow-xl border border-gray-600 p-8 max-w-md w-full">
+      <div className="fixed inset-0 bg-transparent flex items-center justify-center z-50 p-4">
+        <div className="bg-transparent rounded-2xl shadow-xl border border-gray-600 p-8 max-w-md w-full">
           <div className="text-center">
             <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
-              <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              <svg
+                className="w-8 h-8 text-white"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M5 13l4 4L19 7"
+                />
               </svg>
             </div>
             <h3 className="text-2xl font-bold text-global-4 mb-2">Thank You!</h3>
@@ -72,7 +77,6 @@ export default function ContactUs() {
       id="contact"
       className="relative min-h-screen bg-transparent flex items-center section-padding overflow-hidden"
     >
-      {/* Cloud Image */}
       <img
         src="/images/img_image_10.png"
         alt="Cloud"
@@ -82,7 +86,6 @@ export default function ContactUs() {
 
       <div className="container-custom relative z-10 w-full">
         <div className="flex flex-col max-w-5xl w-full mx-auto space-y-8">
-          {/* Top Title Section */}
           <div className="text-center space-y-3 px-4">
             <h1 className="text-4xl sm:text-5xl font-bold">
               Get in{" "}
@@ -95,9 +98,7 @@ export default function ContactUs() {
             </p>
           </div>
 
-          {/* Contact + Form Section */}
           <div className="flex flex-col md:flex-row gap-8 md:gap-12 px-4">
-            {/* Left Side - Contact Info */}
             <div className="flex-1 space-y-6 flex flex-col justify-center text-base">
               <div className="space-y-6">
                 <div className="flex items-center space-x-3">
@@ -138,10 +139,8 @@ export default function ContactUs() {
               </div>
             </div>
 
-            {/* Right Side - Contact Form */}
             <div className="flex-1 w-full md:w-auto max-w-md rounded-2xl p-6 shadow-lg bg-[#060c20]">
               <form className="space-y-6" onSubmit={handleSubmit}>
-                {/* Name Field */}
                 <div className="flex flex-col">
                   <label className="mb-1 text-gray-300 font-medium">Your Name</label>
                   <input
@@ -154,7 +153,6 @@ export default function ContactUs() {
                   />
                 </div>
 
-                {/* Email Field */}
                 <div className="flex flex-col">
                   <label className="mb-1 text-gray-300 font-medium">Your Email</label>
                   <input
@@ -167,7 +165,6 @@ export default function ContactUs() {
                   />
                 </div>
 
-                {/* Message Field */}
                 <div className="flex flex-col">
                   <label className="mb-1 text-gray-300 font-medium">Message</label>
                   <textarea
